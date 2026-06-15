@@ -15,7 +15,7 @@ export function Footer() {
           <div className="max-w-sm">
             <p className="font-display text-xl font-semibold tracking-[-0.01em]">{profile.name}</p>
             <p className="mt-3 text-sm leading-relaxed text-foreground/65">
-              Cognitive Performance Scientist at AWA, bringing the science of the brain to how
+              Cognitive Neuroscientist at AWA, bringing the science of the brain to how
               people and organisations perform — and writing about the mind for people outside
               the lab.
             </p>

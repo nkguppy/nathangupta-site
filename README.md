@@ -1,6 +1,6 @@
 # Nathan Gupta — personal site
 
-A premium, fluid personal site for **Nathan Gupta — Cognitive Performance Scientist at AWA**: a
+A premium, fluid personal site for **Nathan Gupta — Cognitive Neuroscientist at AWA**: a
 rich scrolling home plus dedicated **Work / Writing / About** pages (a hybrid React-Router app).
 Direction: **Graphite** — dark‑default editorial‑creator. Near‑black graphite canvas, a single
 periwinkle/indigo accent (no orange/yellow), Fraunces display serif over Hanken Grotesk, with a

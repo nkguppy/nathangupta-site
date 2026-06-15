@@ -7,30 +7,6 @@ import { ThemeToggle } from '@/components/site/ThemeToggle'
 import { MagneticButton } from '@/components/primitives/MagneticButton'
 import { cn } from '@/lib/utils'
 
-// The mind as a neural constellation: nodes and connections in a rounded
-// cluster. Modern, not a literal brain. The hub + crown node pulse like synapses
-// (CSS in index.css); the mark grows a touch on hover. Single-colour.
-function BrandMark() {
-  return (
-    <svg viewBox="0 0 48 48" className="brain-mark size-7" aria-hidden>
-      <g fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" opacity="0.55">
-        <path d="M24 24 24 10M24 24 13 16M24 24 35 16M24 24 11 28M24 24 37 28M24 24 17 38M24 24 31 38" />
-        <path d="M24 10 13 16 11 28 17 38 31 38 37 28 35 16Z" />
-      </g>
-      <g fill="currentColor">
-        <circle cx="13" cy="16" r="2" />
-        <circle cx="35" cy="16" r="2" />
-        <circle cx="11" cy="28" r="2" />
-        <circle cx="37" cy="28" r="2" />
-        <circle cx="17" cy="38" r="2" />
-        <circle cx="31" cy="38" r="2" />
-        <circle className="syn" cx="24" cy="10" r="2.2" />
-        <circle className="syn s2" cx="24" cy="24" r="2.6" />
-      </g>
-    </svg>
-  )
-}
-
 export function Nav() {
   const { scrollTo } = useSmoothScroll()
   const { pathname } = useLocation()
@@ -104,13 +80,10 @@ export function Nav() {
         <Link
           to="/"
           onClick={onLogo}
-          className="group flex items-center gap-2.5 text-primary"
+          className="group flex items-center"
           aria-label={`${profile.name}, home`}
         >
-          <span className="transition-transform duration-500 ease-[var(--ease-quart)] group-hover:scale-105">
-            <BrandMark />
-          </span>
-          <span className="font-display text-lg font-semibold tracking-[-0.01em] text-foreground">
+          <span className="font-display text-xl font-semibold tracking-[-0.01em] text-foreground transition-colors duration-300 ease-[var(--ease-quart)] group-hover:text-primary">
             {profile.name}
           </span>
         </Link>

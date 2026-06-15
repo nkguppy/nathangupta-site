@@ -1,6 +1,6 @@
 /**
  * All site content lives here so copy can be edited without touching markup.
- * The persona is real (Nathan Gupta, Cognitive Performance Scientist at AWA).
+ * The persona is real (Nathan Gupta, Cognitive Neuroscientist at AWA).
  * The writing pieces and some Work specifics are credible placeholders, written
  * in Nathan's voice and meant to be replaced with his final copy. Nothing here
  * states a metric or client as fact; the confidential engagement is teased only.
@@ -8,7 +8,7 @@
 
 export const profile = {
   name: 'Nathan Gupta',
-  role: 'Cognitive Performance Scientist',
+  role: 'Cognitive Neuroscientist',
   // The truer framing he leads with; the official AWA title is noted once in /about.
   titleOfficial: 'Neuroscience Associate',
   org: 'AWA',
@@ -39,7 +39,7 @@ export const hero = {
   secondaryCta: { label: 'Read my writing', to: '/writing' },
   // Small optimised webp (176px) for the identity chip — the 800px original is
   // kept in public/ for future OG/about use.
-  portrait: { src: '/headshot-sm.webp', alt: 'Nathan Gupta, Cognitive Performance Scientist' },
+  portrait: { src: '/headshot-sm.webp', alt: 'Nathan Gupta, Cognitive Neuroscientist' },
 } as const
 
 // Two-tone H1 candidates for the headline lab (DEV picker via ?h=N). Index 0 is
@@ -427,7 +427,7 @@ export const posts: readonly Post[] = [
 
 export const about = {
   eyebrow: 'About',
-  lead: 'I am a Cognitive Performance Scientist. In plain terms, I study how people think at their best, and what gets in the way.',
+  lead: 'I am a Cognitive Neuroscientist. In plain terms, I study how people think at their best, and what gets in the way.',
   paragraphs: [
     'I spent the first part of my career in psychology and neuroscience — a first-class degree in cognitive psychology, then a master’s in cognition and neuroscience, then research posts spanning health and wellbeing, digital addiction, the overlap between AI and the way real neural networks learn, and the conditions for flow and individual performance. About a decade in the science of the mind, all told.',
     'Then a question started to nag. We spend a third of our lives, often more, at work, and most of that work is now done inside cognitively demanding environments that nobody designed with a brain in mind. The science I cared about was sitting in journals while the place it could help most was running on guesswork. So I moved it.',
@@ -435,14 +435,14 @@ export const about = {
     'I also write and speak, because I think the science is too useful to leave where only specialists can reach it. Most of what I publish is an attempt to take something true about the mind and make it useful out loud.',
   ],
   facts: [
-    { label: 'Role', value: 'Cognitive Performance Scientist, AWA' },
+    { label: 'Role', value: 'Cognitive Neuroscientist, AWA' },
     { label: 'Background', value: 'BSc Cognitive Psychology · MSc Cognition & Neuroscience' },
     { label: 'Focus', value: 'Attention, flow, cognitive wellbeing, performance' },
     { label: 'Based in', value: 'London' },
   ],
   // A quiet footnote acknowledging the official title.
   titleNote:
-    'My official title at AWA is Neuroscience Associate; Cognitive Performance Scientist is the truer description of the work.',
+    'My official title at AWA is Neuroscience Associate; Cognitive Neuroscientist is the truer description of the work.',
 } as const
 
 /* ────────────────────────────── Contact ───────────────────────────── */

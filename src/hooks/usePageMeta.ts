@@ -3,9 +3,9 @@ import { useLocation } from 'react-router-dom'
 
 const ORIGIN = 'https://nathangupta.com'
 const SUFFIX = 'Nathan Gupta'
-const DEFAULT_TITLE = 'Nathan Gupta · Cognitive Performance Scientist at AWA'
+const DEFAULT_TITLE = 'Nathan Gupta · Cognitive Neuroscientist at AWA'
 const DEFAULT_DESCRIPTION =
-  'Nathan Gupta is a Cognitive Performance Scientist at AWA, bringing the science of the brain to how people and organisations perform — across the individual, the team, and the workplace.'
+  'Nathan Gupta is a Cognitive Neuroscientist at AWA, bringing the science of the brain to how people and organisations perform — across the individual, the team, and the workplace.'
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`)
