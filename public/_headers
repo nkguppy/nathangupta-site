@@ -1,0 +1,5 @@
+# TEMP (2026-06-15) — remove this file at public launch (also remove the
+# <meta name="robots"> line in index.html). Keeps the half-built site out of
+# search indexes while the content below the hero is still placeholder.
+/*
+  X-Robots-Tag: noindex

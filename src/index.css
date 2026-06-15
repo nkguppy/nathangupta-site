@@ -1,0 +1,394 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+/* Self-hosted type — Graphite system:
+   Fraunces (high-contrast serif display, opsz + wght axes; SOFT/WONK left at
+   crisp defaults), Hanken Grotesk (humanist sans body), JetBrains Mono (sparing
+   metadata). A true contrast axis: serif display vs sans body. Subset by
+   unicode-range automatically. */
+@import '@fontsource-variable/fraunces/opsz.css';
+@import '@fontsource-variable/hanken-grotesk/index.css';
+@import '@fontsource-variable/jetbrains-mono/index.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* Type */
+  --font-display: 'Fraunces Variable', 'Spectral', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Hanken Grotesk Variable', 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+  --font-heading: var(--font-display);
+
+  /* Easing — Emil curves, exposed as ease-* utilities */
+  --ease-quart: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.33, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Named brand colors (utilities: bg-brand, text-ink, …) */
+  --color-canvas: var(--canvas);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-bright: var(--brand-bright);
+  --color-on-brand: var(--on-brand);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+
+  /* shadcn surface + role tokens */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.75);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ───────────────────────── Graphite · light (toggle) ─────────────────────────
+   A cool near-white at chroma ~0, the cool counterpart to the dark default.
+   Identity lives in the periwinkle accent and the geometric display, never in a
+   warm-tinted surface. The accent deepens here so it carries on white. */
+:root {
+  --canvas: oklch(0.985 0.002 270);
+  --ink: oklch(0.205 0.01 274);
+  --ink-soft: oklch(0.44 0.012 274);
+  --brand: oklch(0.535 0.17 277);
+  --brand-strong: oklch(0.46 0.16 276);
+  --brand-soft: oklch(0.93 0.035 280);
+  /* A deeper, saturated periwinkle for display-scale emphasis on white */
+  --brand-bright: oklch(0.5 0.19 278);
+  --on-brand: oklch(0.985 0.012 274);
+  --surface-2: oklch(0.955 0.004 274);
+  --line: oklch(0.205 0.01 274 / 0.12);
+
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: oklch(0.998 0.001 270);
+  --card-foreground: var(--ink);
+  --popover: oklch(0.998 0.001 270);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: var(--on-brand);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.95 0.004 274);
+  --muted-foreground: var(--ink-soft);
+  --accent: oklch(0.945 0.014 278);
+  --accent-foreground: var(--brand-strong);
+  --destructive: oklch(0.55 0.2 27);
+  --border: var(--line);
+  --input: oklch(0.205 0.01 274 / 0.16);
+  --ring: oklch(0.535 0.17 277);
+
+  --chart-1: oklch(0.55 0.17 277);
+  --chart-2: oklch(0.62 0.12 230);
+  --chart-3: oklch(0.6 0.13 310);
+  --chart-4: oklch(0.65 0.13 200);
+  --chart-5: oklch(0.5 0.14 290);
+
+  --radius: 0.875rem;
+
+  --sidebar: oklch(0.975 0.003 274);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: var(--on-brand);
+  --sidebar-accent: oklch(0.945 0.014 278);
+  --sidebar-accent-foreground: var(--brand-strong);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--ring);
+
+  /* Cool elevation — single soft shadow, never paired with a 1px ghost border */
+  --shadow-soft: 0 1px 2px oklch(0.2 0.02 274 / 0.05), 0 8px 24px oklch(0.22 0.03 274 / 0.08);
+  --shadow-lift: 0 2px 8px oklch(0.2 0.02 274 / 0.07), 0 22px 55px oklch(0.22 0.04 274 / 0.13);
+  --shadow-brand: 0 10px 30px oklch(0.535 0.17 277 / 0.3);
+}
+
+/* ───────────────────────── Graphite · dark (default) ─────────────────────────
+   A near-black graphite canvas, never pure black, faintly cooled toward indigo.
+   The periwinkle accent brightens to glow on the dark ground. */
+.dark {
+  --canvas: oklch(0.175 0.006 274);
+  --ink: oklch(0.955 0.003 270);
+  --ink-soft: oklch(0.705 0.012 274);
+  --brand: oklch(0.7 0.146 276);
+  --brand-strong: oklch(0.5 0.16 275);
+  --brand-soft: oklch(0.3 0.05 275);
+  /* A brighter periwinkle so display-scale emphasis reads as ink, not a dim wash */
+  --brand-bright: oklch(0.8 0.16 276);
+  --on-brand: oklch(0.985 0.012 274);
+  --surface-2: oklch(0.255 0.007 274);
+  --line: oklch(0.955 0.003 270 / 0.12);
+
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: oklch(0.225 0.006 274);
+  --card-foreground: var(--ink);
+  --popover: oklch(0.225 0.006 274);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: oklch(0.18 0.006 274);
+  --secondary: oklch(0.255 0.007 274);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.25 0.006 274);
+  --muted-foreground: var(--ink-soft);
+  --accent: oklch(0.3 0.014 276);
+  --accent-foreground: oklch(0.82 0.11 276);
+  --destructive: oklch(0.7 0.19 22);
+  --border: var(--line);
+  --input: oklch(0.955 0.003 270 / 0.15);
+  --ring: oklch(0.7 0.146 276);
+
+  --chart-1: oklch(0.7 0.146 276);
+  --chart-2: oklch(0.7 0.12 220);
+  --chart-3: oklch(0.68 0.13 320);
+  --chart-4: oklch(0.72 0.12 195);
+  --chart-5: oklch(0.62 0.14 295);
+
+  --sidebar: oklch(0.195 0.006 274);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: oklch(0.18 0.006 274);
+  --sidebar-accent: oklch(0.3 0.014 276);
+  --sidebar-accent-foreground: oklch(0.82 0.11 276);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--ring);
+
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3), 0 8px 24px oklch(0 0 0 / 0.42);
+  --shadow-lift: 0 2px 8px oklch(0 0 0 / 0.4), 0 22px 55px oklch(0 0 0 / 0.55);
+  --shadow-brand: 0 10px 30px oklch(0.7 0.146 276 / 0.32);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Lenis owns smooth scrolling; keep native behavior off */
+    scroll-behavior: auto;
+    scrollbar-color: var(--brand) transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'ss01', 'cv01';
+    overflow-x: clip;
+    min-height: 100svh;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Display headings — Fraunces with optical sizing; serif display reads best
+     with looser tracking than a grotesque (≥ -0.04em floor honoured). */
+  h1, h2, h3, h4 {
+    @apply font-display text-foreground;
+    font-optical-sizing: auto;
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+    line-height: 1.04;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: oklch(0.62 0.16 276 / 0.3);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  /* Honour the platform: stop transform-based motion, keep states instant */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Section rhythm */
+  .section {
+    @apply relative mx-auto w-full max-w-[78rem] px-6 sm:px-8 lg:px-10;
+  }
+
+  /* Animated link: an underline that grows from the left on hover */
+  .ulink {
+    position: relative;
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.4s var(--ease-quart), color 0.25s var(--ease-quart);
+  }
+  .ulink:hover,
+  .ulink:focus-visible {
+    background-size: 100% 1px;
+    color: var(--brand);
+  }
+
+  /* Eyebrow used as a deliberate, sparse brand device (not on every section) */
+  .eyebrow {
+    @apply font-mono text-xs tracking-[0.22em] uppercase text-brand;
+  }
+
+  /* Hairline that fades, for separators */
+  .rule {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--line) 12%, var(--line) 88%, transparent);
+  }
+
+  /* Two-tone focus ring for elements sitting on the saturated brand band, where
+     a single-colour outline can't contrast in both themes. The inner ring
+     matches the band; the outer ring is the band's own light text colour. */
+  .focus-onbrand:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--brand-strong),
+      0 0 0 4px var(--on-brand);
+  }
+}
+
+/* Marquee for the research-areas ticker */
+@keyframes marquee-x {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Soft blur-up shimmer for lazy images before they decode */
+@keyframes lqip-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.85; }
+}
+
+/* Hero scroll-cue: a highlight that travels down the hairline */
+@keyframes scrollcue {
+  0% { transform: translateY(-100%); }
+  60%, 100% { transform: translateY(360%); }
+}
+
+/* Headline accent — a single soft periwinkle glow that lights the payload words
+   a beat after the line reveal settles, echoing the synapse pulse in the mark.
+   --hglow is animated via @property; browsers without it simply get no glow,
+   and reduced-motion drops the animation entirely. Always rests at 0 (no glow),
+   so nothing is ever stranded lit. */
+@property --hglow {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+.hero-accent {
+  text-shadow: 0 0 calc(var(--hglow) * 22px) oklch(0.74 0.15 276 / calc(var(--hglow) * 0.45));
+  animation: hero-accent-glow 1.7s var(--ease-quart) 1s 1 both;
+}
+@keyframes hero-accent-glow {
+  0%, 28% { --hglow: 0; }
+  62% { --hglow: 1; }
+  100% { --hglow: 0; }
+}
+
+/* Slow membrane glow behind the hero brain graphic */
+@keyframes brainglow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-accent { animation: none; }
+}
+
+.marquee-track {
+  animation: marquee-x var(--marquee-duration, 38s) linear infinite;
+  will-change: transform;
+}
+.marquee-track[data-reverse='true'] {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Brand mark — neural-constellation glyph. The hub + crown nodes pulse like
+   synapses; the mark grows slightly on hover (wrapper handles the scale). */
+.brain-mark { overflow: visible; }
+.brain-mark .syn {
+  transform-box: fill-box;
+  animation: synapse 2.6s ease-in-out infinite;
+}
+.brain-mark .s2 { animation-delay: 0.5s; }
+@keyframes synapse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* Custom cursor turns the native one off only where it's safe (fine pointer) */
+@media (hover: hover) and (pointer: fine) {
+  body[data-cursor='on'],
+  body[data-cursor='on'] a,
+  body[data-cursor='on'] button {
+    cursor: none;
+  }
+}
+
+/* Thin periwinkle scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: oklch(0.62 0.16 276 / 0.4);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.62 0.16 276 / 0.6);
+  background-clip: padding-box;
+}

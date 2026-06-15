@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-GB" class="dark" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- TEMP (2026-06-15): keep the half-built site out of search results while
+         content below the hero is placeholder. REMOVE this line at public launch
+         (also delete public/_headers). See handoff.md. -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <title>Nathan Gupta · Cognitive Performance Scientist at AWA</title>
+    <meta
+      name="description"
+      content="Nathan Gupta is a Cognitive Performance Scientist at AWA, bringing the science of the brain to how people, teams and workplaces perform at their best — and writing on the mind in the modern world."
+    />
+    <meta name="theme-color" content="#FAFAFB" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#16171A" media="(prefers-color-scheme: dark)" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Nathan Gupta · Cognitive Performance Scientist at AWA" />
+    <meta
+      property="og:description"
+      content="Bringing the science of the brain to how people, teams and workplaces perform at their best."
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Set theme + js capability before first paint to avoid a flash of the wrong theme -->
+    <script>
+      (function () {
+        var el = document.documentElement
+        el.classList.add('js')
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+        try {
+          var saved = localStorage.getItem('ng-theme')
+          // Graphite ships dark by default; only an explicit saved pref opts out.
+          if (saved !== 'light' && saved !== 'dark') saved = 'dark'
+          el.setAttribute('data-theme', saved)
+          el.classList.toggle('dark', saved === 'dark')
+        } catch (e) {
+          el.setAttribute('data-theme', 'dark')
+          el.classList.add('dark')
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+# Netlify build config for nathangupta.com (Vite static SPA).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# SPA fallback: serve index.html for any path (the app is a single page).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

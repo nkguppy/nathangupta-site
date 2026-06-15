@@ -1,0 +1,126 @@
+# Nathan Gupta — personal site
+
+A premium, fluid one-page site for **Nathan Gupta — Cognitive Performance Scientist at AWA**.
+Direction: **Graphite** — dark‑default editorial‑creator. Near‑black graphite canvas, a single
+periwinkle/indigo accent (no orange/yellow), Fraunces display serif over Hanken Grotesk, with a
+light/dark toggle (default dark). See `handoff.md` for the full spec and the live build plan.
+
+## Stack
+
+- **Vite + React 19 + TypeScript**
+- **Tailwind CSS v4** (`@tailwindcss/vite`, CSS‑first tokens via `@theme`)
+- **GSAP 3.15** — ScrollTrigger (hero parallax), SplitText (headline line‑reveal)
+- **Lenis** — momentum smooth scrolling, driven by GSAP's ticker
+- **shadcn / 21st.dev registry** (base‑nova style) for Badge, Card, Separator, Tooltip, Tabs, etc.
+- Self‑hosted variable fonts via `@fontsource-variable` (Fraunces opsz, Hanken Grotesk, JetBrains Mono)
+
+## Run it
+
+```bash
+cd nathan-gupta-site
+npm install
+npm run dev        # http://localhost:5179 (configured port; preview launch.json uses 5179)
+npm run build      # type-checks, then builds to dist/
+npm run preview    # serve the production build
+```
+
+> Heads up: this project lives inside a Google Drive folder. `node_modules` will sync, which
+> can be slow. Consider excluding `node_modules` from Drive sync, or developing in a local
+> (non‑synced) directory and copying the source back.
+>
+> Google Drive also corrupts the `node_modules/.bin/*` symlinks (they sync as empty), so on
+> Drive `npm run dev`/`npm run build` fail with exit 127. Invoke binaries via node instead:
+> `node node_modules/vite/bin/vite.js --port 5179 --strictPort` (dev) and
+> `node node_modules/vite/bin/vite.js build` (build). On a normal (non‑Drive) clone the npm
+> scripts work as written.
+
+## What you'll want to edit
+
+All copy and content lives in one place: **`src/data/site.ts`**.
+
+- `profile` — name, role, org, location, **email** (`hello@nathangupta.com`, verify it's a live inbox before launch)
+- `hero` — kicker, subhead, CTA labels; `headlineCandidates` (the DEV `?h=N` lab; index 0 ships)
+- `framework` — the three-layer "Performance has three layers" model (individual / team / workplace)
+- `essays` — **placeholder essays** (titles, deks, dates, reading times). Cover art and the
+  links are filler; wire the links to real posts when they exist.
+- `about` — bio paragraphs and the facts list
+- `socials` — Google Scholar / LinkedIn / Bluesky currently point to `#`; drop in real URLs
+
+The essay cover images are generated abstract art (`scripts/gen-assets.mjs` → `public/covers/`).
+Re‑run `node scripts/gen-assets.mjs` to regenerate them or after adding new palettes.
+
+## The interactive bits (and where they live)
+
+- **Scroll‑reactive background** — `components/site/Background.tsx`: a low‑res canvas of cool
+  periwinkle/indigo orbs, CSS‑blurred up; orb bloom tracks scroll velocity, the field parallaxes
+  with scroll position and the pointer, and the palette swaps with the theme. Over it: a deepening
+  veil + corner **vignette** and an **overlay film‑grain** texture (all breakpoints) for depth.
+  Static under reduced motion.
+- **Hero** — `components/site/Hero.tsx`: a vertically-centred split layout on desktop (content
+  left, sphere right on a shared midline), SplitText line‑mask reveal, a scrubbed parallax exit,
+  magnetic CTAs, and the **neural-sphere graphic**. On mobile/tablet the graphic is dropped and the
+  content is fully centred (CTAs stack-centred on phones, side-by-side-centred ≥640px).
+- **Neural sphere (hero graphic)** — `components/site/NeuralSphere.tsx` + `HeroGraphic.tsx`: a
+  slowly rotating 3D globe of glowing nodes with dynamic proximity links, drawn on a **2D canvas
+  (no WebGL — WebGL dead-contexts in Nathan's browser)**. Points sit on a Fibonacci sphere, rotate
+  in 3D and project to 2D; links form/break by screen-space proximity; the cursor wires to nearby
+  nodes. Look presets live in `sphereVariants.ts`; a DEV `?n=N` lab cycles them. A static linked-node
+  SVG is the reduced-motion / no-JS / failure fallback. (Desktop only — by design, no graphic on
+  mobile.) Supersedes the dormant `BrainParticles`/`BrainGraphic`/`brainPath` (kept as a revert baseline).
+- **Framework / "three layers"** — `components/site/Framework.tsx`: Nathan's dartboard model
+  (individual ⊂ team ⊂ workplace) as an interactive nested-scope element with 3D tilt + spotlight.
+- **Essays** — `components/site/Essays.tsx`: topic filter that fades/staggers the matching cards,
+  a featured horizontal card, and blur‑up lazy‑loaded covers (`primitives/LazyImage.tsx`).
+- **Micro‑interactions** — magnetic buttons (`primitives/MagneticButton.tsx`), animated link
+  underlines (`.ulink`), a two‑part custom cursor (`components/site/Cursor.tsx`), a reading
+  progress bar, and a no‑flash light/dark toggle.
+
+## Robustness notes
+
+- **Reveals never strand content.** `lib/reveal.ts` reveals anything in view synchronously and
+  the rest on scroll; every entrance tween is paired with a safety timer (`withRevealSafety`)
+  so content can't get stuck hidden when GSAP's ticker sleeps (background tabs, headless renderers).
+- **Reduced motion** is a first‑class path: Lenis, the cursor, tilt/magnetic effects, the
+  canvas animation, and reveals all degrade to a calm, fully‑visible default.
+- **Accessibility**: text meets WCAG AA contrast in both themes; visible focus rings; a skip
+  link; icon buttons are labelled; the address‑bar theme‑colour follows the theme.
+
+## Project structure
+
+```
+src/
+  index.css            design tokens (OKLCH), base styles, utilities
+  App.tsx              composition + section order
+  data/site.ts         ALL content
+  components/site/      page sections + chrome
+  components/primitives/ Reveal, MagneticButton, TiltCard, LazyImage
+  components/ui/        shadcn / 21st.dev primitives
+  hooks/                useTheme, useReducedMotion, useMagnetic, useTilt, useSplitReveal
+  lib/                  gsap (plugins), reveal (controller), utils (cn)
+public/covers/          generated essay cover art
+scripts/gen-assets.mjs  regenerates covers + favicon
+```
+
+## Deploy
+
+Static SPA → any static host. Recommended: **Netlify** (config in `netlify.toml`). Domain
+**nathangupta.com** is registered at **Squarespace (DNS only)** — Squarespace can't host the
+build, so point its DNS at the host.
+
+**Live (2026-06-15):** **https://nathangupta.com** (HTTPS; apex primary, `www` → apex). Repo:
+private **github.com/nkguppy/nathangupta-site** (Netlify site id `af006ac6-3570-4931-b1b3-c9f867cccc2f`).
+A **temporary `noindex`** (the `<meta name="robots">` in `index.html` + `public/_headers`) keeps the
+placeholder build out of search — **remove both at public launch**. Manual re-deploy after a build:
+`netlify deploy --prod --dir=dist --no-build --site af006ac6-3570-4931-b1b3-c9f867cccc2f` (or link
+GitHub→Netlify so every push auto-deploys).
+
+- **Quick:** `npm run build`, then drag `dist/` onto app.netlify.com (Deploy manually).
+- **Auto-deploy:** push this repo to GitHub, then Netlify → Import from GitHub (build settings
+  come from `netlify.toml`). Every push redeploys.
+- **DNS (Squarespace → Netlify):** in Squarespace, Domains → [domain] → DNS Settings → Custom
+  Records, add `A @ → 75.2.60.5` and `CNAME www → <site>.netlify.app`; remove conflicting default
+  apex/www records (keep MX/TXT). Set **www** as the primary domain in Netlify; HTTPS is automatic.
+  Propagation: minutes–48h.
+
+`public/_redirects` + `netlify.toml` both carry the `/* → /index.html 200` SPA fallback;
+`public/robots.txt` + `public/sitemap.xml` ship for crawlers.
