@@ -63,6 +63,12 @@ All copy and content lives in one place: **`src/data/site.ts`**.
 The essay cover images are generated abstract art (`scripts/gen-assets.mjs` → `public/covers/`).
 Re‑run `node scripts/gen-assets.mjs` to regenerate them or after adding new palettes.
 
+The **OG share image** (`public/og.png`, 1200×630) is the branded card shown when the link is
+shared anywhere. Source is `scripts/og-source.svg`; regenerate with `rsvg-convert` after grabbing
+the brand fonts (Fraunces + JetBrains Mono TTFs) into a fontconfig dir, e.g.
+`FONTCONFIG_FILE=<conf> rsvg-convert -w 1200 -h 630 scripts/og-source.svg -o public/og.png`.
+Wired via `og:image`/`twitter:image` in `index.html`. Edit the SVG (name, eyebrow, motif) and re-run.
+
 ## The interactive bits (and where they live)
 
 - **Scroll‑reactive background** — `components/site/Background.tsx`: a low‑res canvas of cool
