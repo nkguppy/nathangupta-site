@@ -108,11 +108,12 @@ Static SPA → any static host. Recommended: **Netlify** (config in `netlify.tom
 build, so point its DNS at the host.
 
 **Live (2026-06-15):** **https://nathangupta.com** (HTTPS; apex primary, `www` → apex). Repo:
-private **github.com/nkguppy/nathangupta-site** (Netlify site id `af006ac6-3570-4931-b1b3-c9f867cccc2f`).
+public **github.com/nkguppy/nathangupta-site** (Netlify site id `af006ac6-3570-4931-b1b3-c9f867cccc2f`).
 A **temporary `noindex`** (the `<meta name="robots">` in `index.html` + `public/_headers`) keeps the
-placeholder build out of search — **remove both at public launch**. Manual re-deploy after a build:
-`netlify deploy --prod --dir=dist --no-build --site af006ac6-3570-4931-b1b3-c9f867cccc2f` (or link
-GitHub→Netlify so every push auto-deploys).
+placeholder build out of search — **remove both at public launch**. **Auto-deploy is live:** every push
+to `main` triggers a Netlify cloud build (`netlify.toml` → `npm run build`, publish `dist`) and ships to
+nathangupta.com in ~1–2 min. Manual deploy if ever needed:
+`netlify deploy --prod --dir=dist --no-build --site af006ac6-3570-4931-b1b3-c9f867cccc2f`.
 
 - **Quick:** `npm run build`, then drag `dist/` onto app.netlify.com (Deploy manually).
 - **Auto-deploy:** push this repo to GitHub, then Netlify → Import from GitHub (build settings
