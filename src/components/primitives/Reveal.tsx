@@ -16,23 +16,29 @@ type RevealProps = {
   y?: number
   delay?: number
   duration?: number
+  /**
+   * Add a blur-up to the fade. Off by default: animating `filter: blur()` on
+   * large cards/images creates GPU layers that some browsers (notably Safari)
+   * composite incorrectly, leaving text faintly ghosted/hidden mid-scroll. The
+   * opacity + slide carries the reveal cleanly on its own.
+   */
   blur?: boolean
 }
 
-export function Reveal({ children, className, y = 24, delay = 0, duration = 0.9, blur = true }: RevealProps) {
+export function Reveal({ children, className, y = 24, delay = 0, duration = 0.9, blur = false }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
 
   useEffect(() => {
     const el = ref.current
     if (!el || reduced) return
-    gsap.set(el, { opacity: 0, y, filter: blur ? 'blur(8px)' : 'blur(0px)' })
+    gsap.set(el, blur ? { opacity: 0, y, filter: 'blur(8px)' } : { opacity: 0, y })
     return registerReveal(el, () => {
       withRevealSafety(
         gsap.to(el, {
           opacity: 1,
           y: 0,
-          filter: 'blur(0px)',
+          ...(blur ? { filter: 'blur(0px)' } : {}),
           duration,
           delay,
           ease: 'power3.out',
@@ -67,13 +73,14 @@ export function RevealGroup({ children, className, y = 28, stagger = 0.09 }: Rev
     if (!el || reduced) return
     const items = gsap.utils.toArray<HTMLElement>(el.querySelectorAll('[data-reveal-item]'))
     if (!items.length) return
-    gsap.set(items, { opacity: 0, y, filter: 'blur(8px)' })
+    // Opacity + slide only — no filter:blur (see the Reveal note): blurred large
+    // cards ghost/strand on some browsers. Clean fade-up carries it.
+    gsap.set(items, { opacity: 0, y })
     return registerReveal(el, () => {
       withRevealSafety(
         gsap.to(items, {
           opacity: 1,
           y: 0,
-          filter: 'blur(0px)',
           duration: 0.95,
           ease: 'power3.out',
           stagger,

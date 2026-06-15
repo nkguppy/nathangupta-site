@@ -1,4 +1,5 @@
 import { type MouseEvent, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import { useMagnetic } from '@/hooks/useMagnetic'
 import { cn } from '@/lib/utils'
 
@@ -8,6 +9,9 @@ type Props = {
   children: ReactNode
   className?: string
   variant?: Variant
+  /** Internal route — renders a client-side <Link>. Takes precedence over href. */
+  to?: string
+  /** External/anchor href — renders an <a>. */
   href?: string
   onClick?: (e: MouseEvent) => void
   'aria-label'?: string
@@ -42,6 +46,7 @@ export function MagneticButton({
   children,
   className,
   variant = 'primary',
+  to,
   href,
   onClick,
   iconRight,
@@ -70,7 +75,11 @@ export function MagneticButton({
 
   return (
     <span ref={wrapRef} className="inline-block">
-      {href ? (
+      {to ? (
+        <Link to={to} onClick={onClick} className={cls} aria-label={rest['aria-label']}>
+          {inner}
+        </Link>
+      ) : href ? (
         <a href={href} onClick={onClick} className={cls} aria-label={rest['aria-label']}>
           {inner}
         </a>

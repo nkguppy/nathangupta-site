@@ -12,7 +12,10 @@ import { gsap, ScrollTrigger } from '@/lib/gsap'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 
 type ScrollTarget = string | number | HTMLElement
-type ScrollTo = (target: ScrollTarget, opts?: { offset?: number; duration?: number }) => void
+type ScrollTo = (
+  target: ScrollTarget,
+  opts?: { offset?: number; duration?: number; immediate?: boolean },
+) => void
 
 const SmoothScrollCtx = createContext<{ scrollTo: ScrollTo }>({ scrollTo: () => {} })
 
@@ -59,15 +62,21 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   const scrollTo = useCallback<ScrollTo>(
     (target, opts) => {
       const offset = opts?.offset ?? -84
+      const immediate = opts?.immediate ?? false
       const lenis = lenisRef.current
       if (lenis) {
-        lenis.scrollTo(target, { offset, duration: opts?.duration ?? 1.25 })
+        // Recompute dimensions first. Lenis debounces its own resize handling, so
+        // straight after a route change its scroll limit can be stale (short) and
+        // a scrollTo — especially to a hash anchor near the bottom — would clamp.
+        lenis.resize()
+        lenis.scrollTo(target, { offset, duration: opts?.duration ?? 1.25, immediate })
         return
       }
       // Reduced-motion / pre-init fallback
+      const behavior: ScrollBehavior = immediate || reduced ? 'auto' : 'smooth'
       const el = typeof target === 'string' ? document.querySelector(target) : null
-      if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' })
-      else if (typeof target === 'number') window.scrollTo({ top: target })
+      if (el) el.scrollIntoView({ behavior, block: 'start' })
+      else if (typeof target === 'number') window.scrollTo({ top: target, behavior })
     },
     [reduced],
   )

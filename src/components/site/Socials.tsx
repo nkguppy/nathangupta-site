@@ -1,19 +1,11 @@
-import { GraduationCap, Mail } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import type { ComponentType } from 'react'
 import { socials, type SocialLink } from '@/data/site'
 import { cn } from '@/lib/utils'
 
 type IconProps = { className?: string }
 
-// Brand glyphs are inlined: lucide-react no longer ships brand logos.
-function Bluesky({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
-      <path d="M12 10.8c-1.1-2.1-4-6.1-6.8-8C2.6.9 1.6 1.4 1 2 .3 2.7 0 4 0 4.8c0 .9.5 7.3.8 8.4.9 3.6 4.6 4.5 7.9 3.9-5.7 1-7.1 4-4 7 .8.6 1.7.2 2.3-.4.7-.8 2.3-3.3 3-4.7.7 1.4 2.3 3.9 3 4.7.6.6 1.5 1 2.3.4 3.1-3 1.7-6-4-7 3.3.6 7-.3 7.9-3.9.3-1.1.8-7.5.8-8.4 0-.8-.3-2.1-1-2.8-.6-.6-1.6-1.1-4.2.8C16 4.7 13.1 8.7 12 10.8Z" />
-    </svg>
-  )
-}
-
+// Brand glyph inlined: lucide-react no longer ships brand logos.
 function LinkedIn({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden>
@@ -24,9 +16,7 @@ function LinkedIn({ className }: IconProps) {
 
 const icons: Record<SocialLink['icon'], ComponentType<IconProps>> = {
   mail: Mail,
-  scholar: GraduationCap,
   linkedin: LinkedIn,
-  bluesky: Bluesky,
 }
 
 type Tone = 'default' | 'paper'

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X, ArrowUpRight } from 'lucide-react'
 import { nav, profile } from '@/data/site'
 import { useSmoothScroll } from '@/components/site/SmoothScroll'
@@ -32,9 +33,13 @@ function BrandMark() {
 
 export function Nav() {
   const { scrollTo } = useSmoothScroll()
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
+  const wasOpen = useRef(false)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -43,25 +48,48 @@ export function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Keep the closed menu out of the tab order, and let Escape close it.
+  // Keep the closed menu out of the tab order, focus the first link on open, and
+  // — crucially — return focus to the toggle on close BEFORE the menu is inert'd,
+  // so a keyboard user (Escape, or a nav selection) is never dropped to <body>.
   useEffect(() => {
     const el = menuRef.current
-    if (el) el.inert = !open
-    if (!open) return
-    const firstLink = el?.querySelector<HTMLElement>('a')
-    firstLink?.focus()
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false)
+    if (open) {
+      if (el) el.inert = false
+      el?.querySelector<HTMLElement>('a')?.focus()
+      wasOpen.current = true
+      const onKey = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') setOpen(false)
+      }
+      window.addEventListener('keydown', onKey)
+      return () => window.removeEventListener('keydown', onKey)
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    // Closing: restore focus to the trigger before the menu becomes inert.
+    if (wasOpen.current) toggleRef.current?.focus()
+    if (el) el.inert = true
+    wasOpen.current = false
   }, [open])
 
-  const go = (href: string) => (e: React.MouseEvent) => {
+  // Logo: navigate home, or if already home, glide back to the top.
+  const onLogo = (e: React.MouseEvent) => {
+    setOpen(false)
+    if (pathname === '/') {
+      e.preventDefault()
+      scrollTo(0)
+    }
+  }
+
+  // Contact lives globally in the shell, so on most pages this just scrolls down.
+  // On routes that opt out of the contact band (the 404), send the user home to
+  // the contact band instead of firing a dead scroll.
+  const onContact = (e: React.MouseEvent) => {
     e.preventDefault()
     setOpen(false)
-    scrollTo(href)
+    if (document.getElementById('contact')) scrollTo('#contact')
+    else navigate('/#contact')
   }
+
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    cn('ulink text-[0.95rem] transition-colors', isActive ? 'text-primary' : 'text-foreground/80')
 
   return (
     <header
@@ -73,9 +101,9 @@ export function Nav() {
       )}
     >
       <nav className="section flex h-[var(--nav-h,4.5rem)] items-center justify-between" aria-label="Primary">
-        <a
-          href="#top"
-          onClick={go('#top')}
+        <Link
+          to="/"
+          onClick={onLogo}
           className="group flex items-center gap-2.5 text-primary"
           aria-label={`${profile.name}, home`}
         >
@@ -85,13 +113,13 @@ export function Nav() {
           <span className="font-display text-lg font-semibold tracking-[-0.01em] text-foreground">
             {profile.name}
           </span>
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-9 md:flex">
           {nav.map((item) => (
-            <a key={item.href} href={item.href} onClick={go(item.href)} className="ulink text-[0.95rem] text-foreground/80">
+            <NavLink key={item.to} to={item.to} className={navLinkClass}>
               {item.label}
-            </a>
+            </NavLink>
           ))}
         </div>
 
@@ -100,7 +128,7 @@ export function Nav() {
           <div className="hidden md:block">
             <MagneticButton
               href="#contact"
-              onClick={go('#contact')}
+              onClick={onContact}
               variant="primary"
               strength={0.5}
               iconRight={<ArrowUpRight className="size-4" />}
@@ -110,6 +138,7 @@ export function Nav() {
             </MagneticButton>
           </div>
           <button
+            ref={toggleRef}
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? 'Close menu' : 'Open menu'}
@@ -131,24 +160,29 @@ export function Nav() {
       >
         <div className="min-h-0 overflow-hidden">
           <div className="section flex flex-col gap-1 py-4">
-          {nav.map((item) => (
+            {nav.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  cn(
+                    'rounded-xl px-3 py-3 font-display text-2xl transition-colors hover:bg-muted hover:text-primary',
+                    isActive ? 'text-primary' : 'text-foreground',
+                  )
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
             <a
-              key={item.href}
-              href={item.href}
-              onClick={go(item.href)}
-              className="rounded-xl px-3 py-3 font-display text-2xl text-foreground transition-colors hover:bg-muted hover:text-primary"
+              href="#contact"
+              onClick={onContact}
+              className="mt-2 flex items-center justify-between rounded-xl bg-primary px-4 py-3.5 font-medium text-primary-foreground"
             >
-              {item.label}
+              Get in touch
+              <ArrowUpRight className="size-5" />
             </a>
-          ))}
-          <a
-            href="#contact"
-            onClick={go('#contact')}
-            className="mt-2 flex items-center justify-between rounded-xl bg-primary px-4 py-3.5 font-medium text-primary-foreground"
-          >
-            Get in touch
-            <ArrowUpRight className="size-5" />
-          </a>
           </div>
         </div>
       </div>

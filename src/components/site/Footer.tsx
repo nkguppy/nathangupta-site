@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { ArrowUp } from 'lucide-react'
 import { nav, profile } from '@/data/site'
 import { useSmoothScroll } from '@/components/site/SmoothScroll'
@@ -14,25 +15,18 @@ export function Footer() {
           <div className="max-w-sm">
             <p className="font-display text-xl font-semibold tracking-[-0.01em]">{profile.name}</p>
             <p className="mt-3 text-sm leading-relaxed text-foreground/65">
-              Cognitive neuroscientist studying attention, memory and decision-making, and writing
-              about the mind for people outside the lab.
+              Cognitive Performance Scientist at AWA, bringing the science of the brain to how
+              people and organisations perform — and writing about the mind for people outside
+              the lab.
             </p>
             <SocialRow className="mt-6" />
           </div>
 
           <nav aria-label="Footer" className="flex flex-col gap-3 text-sm">
             {nav.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollTo(item.href)
-                }}
-                className="ulink w-fit text-foreground/75"
-              >
+              <Link key={item.to} to={item.to} className="ulink w-fit text-foreground/75">
                 {item.label}
-              </a>
+              </Link>
             ))}
             <a href={`mailto:${profile.email}`} className="ulink w-fit text-foreground/75">
               Email
@@ -48,7 +42,7 @@ export function Footer() {
           </p>
           <button
             type="button"
-            onClick={() => scrollTo('#top')}
+            onClick={() => scrollTo(0)}
             className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-foreground/65 transition-colors hover:text-primary"
           >
             Back to top

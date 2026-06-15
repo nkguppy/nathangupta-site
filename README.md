@@ -1,13 +1,25 @@
 # Nathan Gupta — personal site
 
-A premium, fluid one-page site for **Nathan Gupta — Cognitive Performance Scientist at AWA**.
+A premium, fluid personal site for **Nathan Gupta — Cognitive Performance Scientist at AWA**: a
+rich scrolling home plus dedicated **Work / Writing / About** pages (a hybrid React-Router app).
 Direction: **Graphite** — dark‑default editorial‑creator. Near‑black graphite canvas, a single
 periwinkle/indigo accent (no orange/yellow), Fraunces display serif over Hanken Grotesk, with a
 light/dark toggle (default dark). See `handoff.md` for the full spec and the live build plan.
 
+## Routes
+
+- `/` — home (Hero → Framework → Work/Writing/About teasers → contact)
+- `/work` — AWA case studies (incl. an NDA-safe confidential tease)
+- `/writing` — filterable index (Type: Notes/Essays + Topic) · `/writing/:slug` — reading template
+- `/about` — holistic bio + the three-layer framework · `*` — branded 404
+
+The shell (`components/site/Shell.tsx`) keeps the background, cursor, progress bar, smooth-scroll
+and a global contact closer across routes; secondary pages are code-split (route-level `lazy`).
+
 ## Stack
 
 - **Vite + React 19 + TypeScript**
+- **React Router 7** — hybrid app shell + route-level `lazy` code-splitting
 - **Tailwind CSS v4** (`@tailwindcss/vite`, CSS‑first tokens via `@theme`)
 - **GSAP 3.15** — ScrollTrigger (hero parallax), SplitText (headline line‑reveal)
 - **Lenis** — momentum smooth scrolling, driven by GSAP's ticker
@@ -41,10 +53,12 @@ All copy and content lives in one place: **`src/data/site.ts`**.
 - `profile` — name, role, org, location, **email** (`hello@nathangupta.com`, verify it's a live inbox before launch)
 - `hero` — kicker, subhead, CTA labels; `headlineCandidates` (the DEV `?h=N` lab; index 0 ships)
 - `framework` — the three-layer "Performance has three layers" model (individual / team / workplace)
-- `essays` — **placeholder essays** (titles, deks, dates, reading times). Cover art and the
-  links are filler; wire the links to real posts when they exist.
-- `about` — bio paragraphs and the facts list
-- `socials` — Google Scholar / LinkedIn / Bluesky currently point to `#`; drop in real URLs
+- `caseStudies` — **Work** case studies for `/work` (placeholder, NDA-safe; one `confidential` tease)
+- `posts` — **Writing** for `/writing` + `/writing/:slug` (placeholder; `kind: note|essay`, `topic`,
+  and a `body: Block[]` for the reading view). Covers reuse the generated art in `public/covers/`.
+- `about` — bio paragraphs, facts list, and the official-title footnote
+- `heroSocials` — hero row; only non-`#` entries render (LinkedIn live; add real X/Substack/YouTube/IG)
+- `socials` — Email + LinkedIn only (footer/contact/about); Scholar & Bluesky were dropped
 
 The essay cover images are generated abstract art (`scripts/gen-assets.mjs` → `public/covers/`).
 Re‑run `node scripts/gen-assets.mjs` to regenerate them or after adding new palettes.
@@ -69,11 +83,17 @@ Re‑run `node scripts/gen-assets.mjs` to regenerate them or after adding new pa
   mobile.) Supersedes the dormant `BrainParticles`/`BrainGraphic`/`brainPath` (kept as a revert baseline).
 - **Framework / "three layers"** — `components/site/Framework.tsx`: Nathan's dartboard model
   (individual ⊂ team ⊂ workplace) as an interactive nested-scope element with 3D tilt + spotlight.
-- **Essays** — `components/site/Essays.tsx`: topic filter that fades/staggers the matching cards,
-  a featured horizontal card, and blur‑up lazy‑loaded covers (`primitives/LazyImage.tsx`).
-- **Micro‑interactions** — magnetic buttons (`primitives/MagneticButton.tsx`), animated link
-  underlines (`.ulink`), a two‑part custom cursor (`components/site/Cursor.tsx`), a reading
-  progress bar, and a no‑flash light/dark toggle.
+- **Writing** — `pages/WritingPage.tsx`: Type + Topic filters that fade/stagger the matching
+  `PostCard`s, a featured horizontal card, and blur‑up lazy covers (`primitives/LazyImage.tsx`);
+  `pages/WritingPostPage.tsx` is the reading template (drop‑cap, pull‑quotes, prev/next).
+- **Work** — `pages/WorkPage.tsx`: case panels with tilt + the brand neural‑ring cover
+  (`components/site/CaseCard.tsx` exports `CaseCover`); teasers on the home link in.
+- **Routing/scroll** — `components/site/ScrollManager.tsx`: top-reset on PUSH, **scroll restore on
+  Back/Forward** (per `location.key`), focus-to-`#main` + route announce, and hash navigation
+  (`lenis.resize()` runs before each programmatic scroll so cross-route hash jumps don't clamp).
+- **Micro‑interactions** — magnetic buttons (`primitives/MagneticButton.tsx`, router-aware `to`),
+  animated link underlines (`.ulink`), a two‑part custom cursor (`components/site/Cursor.tsx`), a
+  reading progress bar, and a no‑flash light/dark toggle.
 
 ## Robustness notes
 
@@ -90,14 +110,17 @@ Re‑run `node scripts/gen-assets.mjs` to regenerate them or after adding new pa
 ```
 src/
   index.css            design tokens (OKLCH), base styles, utilities
-  App.tsx              composition + section order
-  data/site.ts         ALL content
-  components/site/      page sections + chrome
-  components/primitives/ Reveal, MagneticButton, TiltCard, LazyImage
+  App.tsx              RouterProvider
+  router.tsx           routes (Shell layout + lazy pages)
+  data/site.ts         ALL content (profile, nav, hero, framework, caseStudies, posts, about…)
+  pages/                Home, WorkPage, WritingPage, WritingPostPage, AboutPage, NotFound
+  components/site/       Shell, ScrollManager, chrome (Nav/Footer/Contact/Background/Cursor…),
+                         Hero, Framework, teasers (Work/Writing/About), PostCard, CaseCard
+  components/primitives/ Reveal, MagneticButton, TiltCard, LazyImage, PageHeader
   components/ui/        shadcn / 21st.dev primitives
-  hooks/                useTheme, useReducedMotion, useMagnetic, useTilt, useSplitReveal
-  lib/                  gsap (plugins), reveal (controller), utils (cn)
-public/covers/          generated essay cover art
+  hooks/                useTheme, useReducedMotion, useMagnetic, useTilt, useSplitReveal, usePageMeta
+  lib/                  gsap (plugins), reveal (controller), format (date), utils (cn)
+public/covers/          generated cover art (reused across writing posts)
 scripts/gen-assets.mjs  regenerates covers + favicon
 ```
 

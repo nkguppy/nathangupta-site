@@ -16,7 +16,7 @@ export function Framework() {
   const { heading, intro, layers } = framework
 
   return (
-    <section id="work" className="section scroll-mt-24 py-24 sm:py-32">
+    <section id="framework" className="section scroll-mt-24 py-24 sm:py-32">
       <Reveal className="mb-14 max-w-2xl">
         <h2 className="font-display text-[clamp(2rem,4.5vw,3.25rem)] font-semibold leading-[1.05] tracking-[-0.02em]">
           {heading}
@@ -111,6 +111,7 @@ function NestedScope({ active, setActive, labels }: { active: number; setActive:
         onFocus={() => setActive(0)}
         onClick={() => setActive(0)}
         aria-label={labels[0]}
+        aria-pressed={on(0)}
         style={{ boxShadow: glow(0) }}
         className={cn(
           'absolute inset-[33%] grid place-items-center rounded-[16px] border transition-[border-color,background-color] duration-300',
@@ -150,6 +151,7 @@ function Frame({
       onFocus={() => setActive(i)}
       onClick={() => setActive(i)}
       aria-label={label}
+      aria-pressed={on}
       style={{ boxShadow: glow }}
       className={cn('absolute border transition-[border-color,background-color] duration-300', on ? 'border-primary/60 bg-primary/[0.04]' : 'border-border', className)}
     >

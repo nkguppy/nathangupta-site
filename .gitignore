@@ -18,6 +18,9 @@ dist-ssr
 # Internal project notes — kept on local disk, NOT published (repo is public)
 handoff.md
 
+# Local Claude Code dev tooling (preview launch config) — not for the public repo
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

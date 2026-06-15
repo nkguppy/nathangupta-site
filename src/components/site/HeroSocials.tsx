@@ -14,9 +14,12 @@ const paths: Record<HeroSocialIcon, string> = {
 }
 
 export function HeroSocials({ className }: { className?: string }) {
+  // Only render socials with a real destination; placeholders ('#') stay hidden
+  // until Nathan supplies the handles, so nothing looks live that isn't.
+  const live = heroSocials.filter((s) => s.href !== '#')
   return (
     <ul className={cn('flex items-center gap-2', className)}>
-      {heroSocials.map((s) => {
+      {live.map((s) => {
         const external = s.href.startsWith('http')
         return (
           <li key={s.label}>

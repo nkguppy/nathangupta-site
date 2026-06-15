@@ -70,11 +70,6 @@ export function Hero() {
     return () => ctx.revert()
   }, [reduced])
 
-  const onCta = (href: string) => (e: React.MouseEvent) => {
-    e.preventDefault()
-    scrollTo(href)
-  }
-
   const pickHeadline = (i: number) => {
     const url = new URL(window.location.href)
     url.searchParams.set('h', String(i))
@@ -125,16 +120,14 @@ export function Hero() {
 
             <div data-hero-fade className="mt-11 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:items-start lg:justify-start">
               <MagneticButton
-                href={hero.primaryCta.href}
-                onClick={onCta(hero.primaryCta.href)}
+                to={hero.primaryCta.to}
                 variant="primary"
                 iconRight={<ArrowRight className="size-4" />}
               >
                 {hero.primaryCta.label}
               </MagneticButton>
               <MagneticButton
-                href={hero.secondaryCta.href}
-                onClick={onCta(hero.secondaryCta.href)}
+                to={hero.secondaryCta.to}
                 variant="secondary"
                 strength={0.3}
                 iconRight={<ArrowUpRight className="size-4" />}
@@ -167,8 +160,8 @@ export function Hero() {
         {/* Scroll cue */}
         <button
           type="button"
-          onClick={() => scrollTo('#work')}
-          aria-label="Scroll to the work"
+          onClick={() => scrollTo('#framework')}
+          aria-label="Scroll to the framework"
           className="group absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-foreground/60 transition-colors hover:text-primary lg:flex"
         >
           <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em]">Scroll</span>
