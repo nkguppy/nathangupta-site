@@ -77,16 +77,20 @@ Wired via `og:image`/`twitter:image` in `index.html`. Edit the SVG (name, eyebro
   veil + corner **vignette** and an **overlay film‑grain** texture (all breakpoints) for depth.
   Static under reduced motion.
 - **Hero** — `components/site/Hero.tsx`: a vertically-centred split layout on desktop (content
-  left, sphere right on a shared midline), SplitText line‑mask reveal, a scrubbed parallax exit,
-  magnetic CTAs, and the **neural-sphere graphic**. On mobile/tablet the graphic is dropped and the
+  left, brain right on a shared midline), SplitText line‑mask reveal, a scrubbed parallax exit,
+  magnetic CTAs, and the **particle-brain graphic**. On mobile/tablet the graphic is dropped and the
   content is fully centred (CTAs stack-centred on phones, side-by-side-centred ≥640px).
-- **Neural sphere (hero graphic)** — `components/site/NeuralSphere.tsx` + `HeroGraphic.tsx`: a
-  slowly rotating 3D globe of glowing nodes with dynamic proximity links, drawn on a **2D canvas
-  (no WebGL — WebGL dead-contexts in Nathan's browser)**. Points sit on a Fibonacci sphere, rotate
-  in 3D and project to 2D; links form/break by screen-space proximity; the cursor wires to nearby
-  nodes. Look presets live in `sphereVariants.ts`; a DEV `?n=N` lab cycles them. A static linked-node
-  SVG is the reduced-motion / no-JS / failure fallback. (Desktop only — by design, no graphic on
-  mobile.) Supersedes the dormant `BrainParticles`/`BrainGraphic`/`brainPath` (kept as a revert baseline).
+- **Particle brain (hero graphic)** — `components/site/PialBrain.tsx` + `HeroGraphic.tsx`, data in
+  `components/site/brainCloud.ts`: a slowly rotating brain rendered as ~6,000 glowing periwinkle
+  particles on a **transparent 2D canvas (no WebGL — WebGL dead-contexts in Nathan's browser)**, so
+  it composites over the animated `Background`. The point cloud is sampled from a **real FreeSurfer
+  pial cortical surface** (genuine gyri / sulci / central fissure / lobes; see colophon for the
+  CC-BY-SA source). Each frame: rotate in 3D → project → additive glow, with **depth-fade + front-face
+  dimming** (the translucent volumetric read) and **surface-following "fold lines"** that trace the
+  gyri (not a nearest-neighbour web). On mount it **assembles from a sphere into the brain** (the
+  page-load transition); the cursor pulls + wires the surface; a drifting ambient field adds depth.
+  Spin 1.5×, density 6,000, fold-lines on. A static SVG is the no‑JS / pre‑frame fallback; reduced
+  motion holds one still frame. (Desktop only — by design, no graphic on mobile.)
 - **Framework / "three layers"** — `components/site/Framework.tsx`: Nathan's dartboard model
   (individual ⊂ team ⊂ workplace) as an interactive nested-scope element with 3D tilt + spotlight.
 - **Writing** — `pages/WritingPage.tsx`: Type + Topic filters that fade/stagger the matching

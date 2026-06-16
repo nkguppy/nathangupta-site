@@ -38,7 +38,7 @@ export function Footer() {
 
         <div className="mt-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <p className="font-mono text-xs text-foreground/65">
-            © {year} {profile.name}. Set in Fraunces &amp; Hanken Grotesk.
+            © {year} {profile.name}. Set in Fraunces &amp; Hanken Grotesk. Brain: FreeSurfer pial surface · brainder.org · CC-BY-SA.
           </p>
           <button
             type="button"
