@@ -145,14 +145,14 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Neural sphere — DESKTOP ONLY (hidden below lg, per Nathan's brief: no
-            interactive graphic on mobile). Bleeds off the right, vertically centred
-            behind the content; left-edge mask so it never crowds the headline.
-            pointer-events-none so it never blocks. */}
+        {/* Particle brain — DESKTOP ONLY (hidden below lg, per Nathan's brief: no
+            interactive graphic on mobile). Inset from the right so the brain sits
+            fully in frame (doesn't clip), vertically centred behind the content;
+            left-edge mask so it never crowds the headline. pointer-events-none. */}
         <div
           ref={brainRef}
           aria-hidden
-          className="pointer-events-none hidden lg:absolute lg:inset-y-0 lg:right-[-4%] lg:block lg:h-auto lg:w-[52%] lg:[-webkit-mask-image:linear-gradient(to_right,transparent,#000_26%)] lg:[mask-image:linear-gradient(to_right,transparent,#000_26%)]"
+          className="pointer-events-none hidden lg:absolute lg:inset-y-0 lg:right-[4%] lg:block lg:h-auto lg:w-[52%] lg:[-webkit-mask-image:linear-gradient(to_right,transparent,#000_26%)] lg:[mask-image:linear-gradient(to_right,transparent,#000_26%)]"
         >
           <HeroGraphic />
         </div>
