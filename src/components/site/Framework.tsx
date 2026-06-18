@@ -70,10 +70,10 @@ function LayerCard({ layer, active, onActivate }: { layer: Layer; active: boolea
       {/* content floats above the card surface for a parallax depth pop */}
       <div className="relative z-10 [transform:translateZ(26px)] [transform-style:preserve-3d]">
         <div className="flex items-baseline gap-4">
-          <span className={cn('font-mono text-xs tracking-[0.1em] transition-colors', active ? 'text-primary' : 'text-foreground/45')}>
+          <span className={cn('font-mono text-xs tracking-[0.1em] transition-colors', active ? 'text-primary' : 'text-foreground/70')}>
             {layer.index}
           </span>
-          <span className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-foreground/55">{layer.label}</span>
+          <span className="font-mono text-[0.7rem] uppercase tracking-[0.18em] text-foreground/70">{layer.label}</span>
         </div>
         <h3 className="mt-3 font-display text-2xl font-semibold tracking-[-0.01em]">{layer.title}</h3>
         <p className="mt-2.5 max-w-prose leading-relaxed text-foreground/70">{layer.body}</p>
@@ -83,7 +83,7 @@ function LayerCard({ layer, active, onActivate }: { layer: Layer; active: boolea
               key={p}
               className={cn(
                 'rounded-full border px-3 py-1 font-mono text-[0.72rem] tracking-tight transition-colors',
-                active ? 'border-primary/30 bg-primary/[0.06] text-foreground/80' : 'border-border bg-secondary/50 text-foreground/60',
+                active ? 'border-primary/30 bg-primary/[0.06] text-foreground/80' : 'border-border bg-secondary/50 text-foreground/70',
               )}
             >
               {p}
@@ -155,7 +155,7 @@ function Frame({
       style={{ boxShadow: glow }}
       className={cn('absolute border transition-[border-color,background-color] duration-300', on ? 'border-primary/60 bg-primary/[0.04]' : 'border-border', className)}
     >
-      <span className={cn('absolute font-mono uppercase transition-colors', on ? 'text-primary' : 'text-foreground/45', labelClass)}>{label}</span>
+      <span className={cn('absolute font-mono uppercase transition-colors', on ? 'text-primary' : 'text-foreground/70', labelClass)}>{label}</span>
     </button>
   )
 }

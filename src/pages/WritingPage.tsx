@@ -32,7 +32,7 @@ function Pills<T extends string>({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2.5">
-      <span className="mr-1 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-foreground/45">
+      <span className="mr-1 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-foreground/70">
         {label}
       </span>
       <div className="flex flex-wrap gap-2" role="group" aria-label={ariaLabel}>
@@ -156,7 +156,7 @@ export function WritingPage() {
         </div>
 
         {!anyVisible ? (
-          <p className="py-16 text-center text-foreground/60">
+          <p className="py-16 text-center text-foreground/70">
             Nothing here yet under that filter. More writing is on the way.
           </p>
         ) : null}

@@ -1,5 +1,16 @@
-# TEMP (2026-06-15) — remove this file at public launch (also remove the
-# <meta name="robots"> line in index.html). Keeps the half-built site out of
-# search indexes while the content below the hero is still placeholder.
+# Long-cache the fingerprinted build output. Safe because every filename here is
+# content-hashed (Vite hashes /assets/*; the brain mesh carries its own hash, see
+# brainMeta.ts) — a change ships under a new name, so an immutable cache can't go
+# stale. These rules STAY at public launch.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+/brain_lo.*.bin
+  Cache-Control: public, max-age=31536000, immutable
+/covers/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# TEMP (2026-06-15) — keep the half-built site out of search while the content is
+# placeholder. At public launch remove ONLY this /* stanza (and the
+# <meta name="robots"> line in index.html). The cache rules above must remain.
 /*
   X-Robots-Tag: noindex

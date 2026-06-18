@@ -29,7 +29,7 @@ export function Contact() {
             <h2 className="max-w-[18ch] font-display text-[clamp(2.1rem,5vw,3.6rem)] font-semibold leading-[1.06] tracking-[-0.025em] text-on-brand">
               {contact.heading}
             </h2>
-            <p className="mt-6 max-w-[54ch] text-[1.1rem] leading-relaxed text-on-brand/85">
+            <p className="mt-6 max-w-[54ch] text-[1.1rem] leading-relaxed text-on-brand/95">
               {contact.body}
             </p>
 

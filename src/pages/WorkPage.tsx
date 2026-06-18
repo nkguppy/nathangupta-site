@@ -1,4 +1,5 @@
-import { caseStudies, workMeta, type CaseStudy } from '@/data/site'
+import { ArrowUpRight } from 'lucide-react'
+import { caseStudies, links, workMeta, type CaseStudy } from '@/data/site'
 import { usePageMeta } from '@/hooks/usePageMeta'
 import { Reveal } from '@/components/primitives/Reveal'
 import { TiltCard } from '@/components/primitives/TiltCard'
@@ -21,7 +22,7 @@ function CasePanel({ study, reverse }: { study: CaseStudy; reverse: boolean }) {
         </TiltCard>
 
         <div className={cn(reverse && 'lg:order-1')}>
-          <div className="flex flex-wrap items-center gap-3 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-foreground/55">
+          <div className="flex flex-wrap items-center gap-3 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-foreground/70">
             <span className="text-primary">{study.kind}</span>
             <span aria-hidden>·</span>
             <span>{study.period}</span>
@@ -37,7 +38,7 @@ function CasePanel({ study, reverse }: { study: CaseStudy; reverse: boolean }) {
           </h2>
           <p className="mt-4 text-[1.05rem] leading-relaxed text-foreground/75">{study.detail}</p>
 
-          <p className="mt-6 font-mono text-xs uppercase tracking-[0.16em] text-foreground/55">
+          <p className="mt-6 font-mono text-xs uppercase tracking-[0.16em] text-foreground/70">
             Role — <span className="text-foreground/80">{study.role}</span>
           </p>
           <ul className="mt-4 space-y-2.5">
@@ -59,6 +60,19 @@ function CasePanel({ study, reverse }: { study: CaseStudy; reverse: boolean }) {
               </li>
             ))}
           </ul>
+
+          {study.href ? (
+            <a
+              href={study.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor-hover
+              className="mt-7 inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-brand-bright"
+            >
+              View project
+              <ArrowUpRight className="size-4" />
+            </a>
+          ) : null}
         </div>
       </article>
     </Reveal>
@@ -76,6 +90,22 @@ export function WorkPage() {
             <CasePanel key={study.slug} study={study} reverse={i % 2 === 1} />
           ))}
         </div>
+
+        <Reveal className="mt-20 border-t border-border pt-10 sm:mt-28">
+          <p className="text-[0.98rem] leading-relaxed text-foreground/70">
+            This is what I can share publicly.{' '}
+            <a
+              href={links.awa}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor-hover
+              className="ulink font-medium text-primary"
+            >
+              See my full profile on AWA
+            </a>
+            , or get in touch to talk through the rest.
+          </p>
+        </Reveal>
       </div>
     </>
   )

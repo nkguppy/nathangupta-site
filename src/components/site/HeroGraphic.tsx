@@ -1,7 +1,6 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { ErrorBoundary } from '@/components/site/ErrorBoundary'
-import PialBrain from '@/components/site/PialBrain'
 import type { NeuronFx } from '@/components/site/brainNeurons'
 import { DEFAULT_BRAIN_PALETTE, isBrainPalette, type BrainPalette } from '@/components/site/brainPalettes'
 import { cn } from '@/lib/utils'
@@ -9,12 +8,17 @@ import { cn } from '@/lib/utils'
 /**
  * Hero graphic — a glowing cortical-surface brain over a static SVG base/fallback.
  *
- * On a WebGL-capable desktop it renders the real 3D surface brain (SurfaceBrain,
- * lazy-loaded so three.js is a separate chunk). Everywhere else — mobile/tablet,
- * reduced motion, no WebGL2, a lost GL context, or any render error — it falls
- * back to the lightweight 2D-canvas PialBrain. So there is always a visible brain,
- * never a white box or an error card. The SVG shows under no-JS / before the first
- * canvas frame and fades once a frame is confirmed.
+ * DESKTOP ONLY: the parent Hero mounts this wrapper at ≥lg (hidden lg:block), per
+ * Nathan's brief of no hero graphic on mobile — so on phones/tablets nothing here
+ * renders and the hero is the fully-centred content layout (see README).
+ *
+ * When mounted, a WebGL-capable dark desktop renders the real 3D surface brain
+ * (SurfaceBrain, lazy-loaded so three.js is a separate chunk). The remaining
+ * desktop cases — light theme, no WebGL2, a lost GL context, reduced motion, or any
+ * render error — fall back to the lightweight 2D-canvas PialBrain (also lazy). So a
+ * mounted graphic is always a visible brain, never a white box or an error card.
+ * The SVG shows before the first canvas frame (and under no-JS) and fades once a
+ * frame is confirmed.
  */
 
 function hasWebGL2(): boolean {
@@ -27,6 +31,10 @@ function hasWebGL2(): boolean {
 }
 
 const SurfaceBrain = lazy(() => import('@/components/site/SurfaceBrain'))
+// Lazy too: the 2D fallback pulls in brainCloud.ts (~51 KB base64). Desktop WebGL
+// visitors never mount it, so keeping it out of the eager index chunk is a clean win.
+// It loads only on the fallback paths (mobile / light / no-WebGL / reduced / crash).
+const PialBrain = lazy(() => import('@/components/site/PialBrain'))
 
 // Static fallback: a small linked-node ring (shown only pre-frame / no-JS).
 const FB = Array.from({ length: 16 }, (_, i) => {
@@ -126,7 +134,9 @@ export function HeroGraphic({ className }: { className?: string }) {
           capable desktop, else the 2D PialBrain. Any crash → PialBrain via the boundary. */}
       <ErrorBoundary
         fallback={
-          <PialBrain reduced={reduced} quality={quality} onReady={() => setReady(true)} className={brainClass} />
+          <Suspense fallback={null}>
+            <PialBrain reduced={reduced} quality={quality} onReady={() => setReady(true)} className={brainClass} />
+          </Suspense>
         }
       >
         {useSurface ? (
@@ -141,7 +151,9 @@ export function HeroGraphic({ className }: { className?: string }) {
             />
           </Suspense>
         ) : (
-          <PialBrain reduced={reduced} quality={quality} onReady={() => setReady(true)} className={brainClass} />
+          <Suspense fallback={null}>
+            <PialBrain reduced={reduced} quality={quality} onReady={() => setReady(true)} className={brainClass} />
+          </Suspense>
         )}
       </ErrorBoundary>
     </div>

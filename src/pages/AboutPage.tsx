@@ -23,7 +23,7 @@ function FrameworkSummary() {
           >
             <div className="flex items-baseline gap-3">
               <span className="font-mono text-xs text-primary">{layer.index}</span>
-              <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-foreground/55">
+              <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-foreground/70">
                 {layer.label}
               </span>
             </div>
@@ -60,7 +60,7 @@ export function AboutPage() {
               </div>
             </Reveal>
             <Reveal delay={0.05}>
-              <p className="mt-8 border-l-2 border-border pl-4 font-mono text-xs leading-relaxed tracking-[0.04em] text-foreground/55">
+              <p className="mt-8 border-l-2 border-border pl-4 font-mono text-xs leading-relaxed tracking-[0.04em] text-foreground/70">
                 {about.titleNote}
               </p>
             </Reveal>

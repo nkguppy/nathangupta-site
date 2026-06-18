@@ -1,0 +1,12 @@
+{
+  "name": "Nathan Gupta — Cognitive Neuroscientist at AWA",
+  "short_name": "Nathan Gupta",
+  "description": "Bringing the science of the brain to how people, teams and workplaces perform.",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" }
+  ],
+  "theme_color": "#16171A",
+  "background_color": "#16171A",
+  "display": "browser"
+}

@@ -108,8 +108,8 @@ export function Hero() {
                 <img
                   src={hero.portrait.src}
                   alt={hero.portrait.alt}
-                  width={56}
-                  height={56}
+                  width={176}
+                  height={176}
                   decoding="async"
                   fetchPriority="high"
                   className="size-full object-cover object-top grayscale contrast-[1.08]"
@@ -180,7 +180,7 @@ export function Hero() {
           type="button"
           onClick={() => scrollTo('#framework')}
           aria-label="Scroll to the framework"
-          className="group absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-foreground/60 transition-colors hover:text-primary lg:flex"
+          className="group absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-foreground/70 transition-colors hover:text-primary lg:flex"
         >
           <span className="font-mono text-[0.7rem] uppercase tracking-[0.2em]">Scroll</span>
           <span className="relative h-9 w-px overflow-hidden bg-border">

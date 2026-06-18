@@ -48,6 +48,10 @@ export function usePageMeta({ title, description }: { title?: string; descriptio
     setMeta('property', 'og:url', url)
     setMeta('name', 'twitter:title', document.title)
     setMeta('name', 'twitter:description', desc)
+    // og:image is intentionally NOT set per-route: the static branded card from
+    // index.html (og.png) carries every route for v1. Per-post OG cards are a
+    // deferred nice-to-have — worth generating once the essays are Nathan's final
+    // pieces rather than placeholders (recipe: scripts/og-source.svg + rsvg).
     setCanonical(url)
   }, [title, description, pathname])
 }

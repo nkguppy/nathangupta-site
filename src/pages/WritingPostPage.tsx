@@ -47,8 +47,11 @@ export function WritingPostPage() {
   // every not-found experience on the site is identical.
   if (!post) return <Navigate to="/404" replace />
 
-  const prev = posts[index - 1]
-  const next = posts[index + 1]
+  // posts is newest-first, so the older piece sits at the higher index. Map
+  // "Previous" → the older post (published before this one) and "Next" → the
+  // newer post, so the arrows follow the natural reading-by-date direction.
+  const prev = posts[index + 1]
+  const next = posts[index - 1]
 
   return (
     <article className="section pt-32 pb-16 sm:pt-40">
@@ -56,7 +59,7 @@ export function WritingPostPage() {
         <Link
           to="/writing"
           data-cursor-hover
-          className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-foreground/60 transition-colors hover:text-primary"
+          className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-foreground/70 transition-colors hover:text-primary"
         >
           <ArrowLeft className="size-3.5 transition-transform duration-300 ease-[var(--ease-quart)] group-hover:-translate-x-1" />
           All writing
@@ -65,7 +68,7 @@ export function WritingPostPage() {
         <Reveal className="mt-8">
           <div className="flex flex-wrap items-center gap-3">
             <Badge className="bg-primary/12 text-primary">{post.topic}</Badge>
-            <span className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-foreground/55">
+            <span className="font-mono text-[0.72rem] uppercase tracking-[0.16em] text-foreground/70">
               {post.kind} · {formatDate(post.date)} · {post.readingTime}
             </span>
           </div>
@@ -95,12 +98,12 @@ export function WritingPostPage() {
         <div className="rule mt-14" />
 
         <div className="mt-6 flex items-center justify-between gap-4">
-          <p className="font-mono text-xs text-foreground/60">
+          <p className="font-mono text-xs text-foreground/70">
             Written by {profile.name}
           </p>
           <Link
             to="/writing"
-            className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-foreground/60 transition-colors hover:text-primary"
+            className="group inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-foreground/70 transition-colors hover:text-primary"
           >
             All writing
             <ArrowRight className="size-3.5 transition-transform duration-300 ease-[var(--ease-quart)] group-hover:translate-x-1" />
@@ -118,7 +121,7 @@ export function WritingPostPage() {
                 data-cursor-hover
                 className="group rounded-[16px] border border-border bg-card/50 p-5 transition-[transform,border-color,box-shadow] duration-300 ease-[var(--ease-quart)] hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-soft)]"
               >
-                <span className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-foreground/50">
+                <span className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-foreground/70">
                   ← Previous
                 </span>
                 <span className="mt-2 block font-display text-lg font-semibold leading-snug tracking-[-0.01em] group-hover:text-primary">
@@ -134,7 +137,7 @@ export function WritingPostPage() {
                 data-cursor-hover
                 className="group rounded-[16px] border border-border bg-card/50 p-5 text-right transition-[transform,border-color,box-shadow] duration-300 ease-[var(--ease-quart)] hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[var(--shadow-soft)]"
               >
-                <span className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-foreground/50">
+                <span className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-foreground/70">
                   Next →
                 </span>
                 <span className="mt-2 block font-display text-lg font-semibold leading-snug tracking-[-0.01em] group-hover:text-primary">

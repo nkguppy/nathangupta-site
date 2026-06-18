@@ -124,6 +124,9 @@ export function Background() {
 
     let t = 0
     let last = performance.now()
+    let painted = false
+    let lastPaintPx = -1
+    let lastPaintPy = -1
     const render = (now: number) => {
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
@@ -135,13 +138,28 @@ export function Background() {
       velocity *= 0.9
       bloom += (velocity - bloom) * 0.1
 
+      // The living field concentrates in the hero and settles below the fold.
+      const heroFactor = Math.max(0, 1 - scrollLerp * 1.4)
+      // Below the hero the field is faint and nearly still. Once it has settled
+      // there, stop allocating 5 radial gradients every frame — keep the cheap
+      // lerps running but skip the paint until it re-enters the hero, the scroll
+      // bloom is still settling, or pointer parallax actually shifts it.
+      const pointerShift =
+        Math.abs(px - lastPaintPx) > 0.0015 || Math.abs(py - lastPaintPy) > 0.0015
+      if (painted && heroFactor < 0.02 && bloom < 0.01 && !pointerShift) {
+        raf = requestAnimationFrame(render)
+        return
+      }
+
       const pal = isDark ? DARK : LIGHT
       ctx.globalCompositeOperation = 'source-over'
       ctx.clearRect(0, 0, w, h)
       ctx.globalCompositeOperation = isDark ? 'lighter' : 'source-over'
 
-      // The living field concentrates in the hero and settles below the fold.
-      const heroFactor = Math.max(0, 1 - scrollLerp * 1.4)
+      painted = true
+      lastPaintPx = px
+      lastPaintPy = py
+
       for (const b of BLOBS) {
         const osc = t * b.speed * 6.283 + b.phase
         // Two layered sines per axis give a richer, less mechanical drift.

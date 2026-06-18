@@ -58,7 +58,7 @@ export function CaseCard({ study }: { study: CaseStudy }) {
     >
       <CaseCover study={study} className="aspect-[16/9]" />
       <div className="flex flex-1 flex-col p-6">
-        <div className="flex items-center gap-3 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-foreground/55">
+        <div className="flex items-center gap-3 font-mono text-[0.66rem] uppercase tracking-[0.16em] text-foreground/70">
           <span className="text-primary">{study.kind}</span>
           <span aria-hidden>·</span>
           <span>{study.period}</span>

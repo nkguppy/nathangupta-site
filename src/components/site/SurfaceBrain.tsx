@@ -11,9 +11,10 @@ import { BRAIN_PALETTES, DEFAULT_BRAIN_PALETTE, type BrainPalette } from '@/comp
 
 /**
  * Hero brain — the LOCKED "periwinkle" look from the WebGL surface-brain lab,
- * ported to React. The real FreeSurfer pial cortex (≈290k verts / 579k faces,
- * fetched lazily from /brain_geo.bin) rendered as a glowing additive x-ray
- * SURFACE: fresnel rim + curvature-driven sulcus glow + UnrealBloom, slow spin.
+ * ported to React. A decimated FreeSurfer pial cortex (≈62k verts / 161k faces,
+ * fetched lazily from the content-hashed /brain_lo.<hash>.bin — see brainMeta.ts)
+ * rendered as a glowing additive x-ray SURFACE: fresnel rim + curvature-driven
+ * sulcus glow + UnrealBloom, slow spin.
  * TRANSPARENT canvas (alpha derived from luminance in a final pass) so it
  * composites over the animated Background + hero particle field as a glow.
  * (The ambient particles live in a separate hero-wide 2D layer — HeroParticles —
@@ -257,6 +258,11 @@ export default function SurfaceBrain({ reduced = false, fx = 'none', palette = D
       try {
         const res = await fetch(BRAIN_MESH.url, { signal: ac.signal })
         if (!res.ok) throw new Error(`mesh ${res.status}`)
+        // Guard the SPA fallback: a misrouted asset is rewritten to index.html and
+        // returns 200 text/html, which would feed garbage to the binary parser.
+        // Throw instead → the catch swaps in the 2D PialBrain.
+        const ct = res.headers.get('content-type') ?? ''
+        if (ct.includes('text/html')) throw new Error(`mesh got HTML (${ct})`)
         const buf = await res.arrayBuffer()
         responded = true
         window.clearTimeout(loadTimeout)

@@ -37,9 +37,15 @@ export const hero = {
     'I bring the science of the brain to how organisations can perform at their best, across the individual, their teams, and the workplace they do it in.',
   primaryCta: { label: 'Explore my work', to: '/work' },
   secondaryCta: { label: 'Read my writing', to: '/writing' },
-  // Small optimised webp (176px) for the identity chip — the 800px original is
-  // kept in public/ for future OG/about use.
+  // Small optimised webp (176px) for the identity chip in the hero.
   portrait: { src: '/headshot-sm.webp', alt: 'Nathan Gupta, Cognitive Neuroscientist' },
+} as const
+
+// The larger portrait (800px webp) used on the /about page. Greyscale-treated in
+// the component so the warm parkland background sits inside the cool palette.
+export const aboutPortrait = {
+  src: '/headshot.webp',
+  alt: 'Nathan Gupta, Cognitive Neuroscientist at AWA',
 } as const
 
 // Two-tone H1 candidates for the headline lab (DEV picker via ?h=N). Index 0 is
