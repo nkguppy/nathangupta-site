@@ -9,6 +9,7 @@ import { BRAIN_PALETTES, DEFAULT_BRAIN_PALETTE, type BrainPalette } from '@/comp
 
 const FX = ['none', 'cursor', 'ambient', 'entrance'] as const
 const PALETTES = Object.keys(BRAIN_PALETTES) as BrainPalette[]
+const LAYOUTS = ['wide', 'even'] as const
 
 function Btn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
@@ -31,6 +32,7 @@ export function HeroLab() {
   const particlesOn = params.get('particles') === 'on'
   const fx = (FX as readonly string[]).includes(params.get('fx') || '') ? (params.get('fx') as string) : 'none'
   const palette = (PALETTES as string[]).includes(params.get('palette') || '') ? (params.get('palette') as BrainPalette) : DEFAULT_BRAIN_PALETTE
+  const layout = params.get('layout') === 'even' ? 'even' : 'wide'
 
   const go = (mut: (u: URL) => void) => {
     const u = new URL(window.location.href)
@@ -40,6 +42,7 @@ export function HeroLab() {
   const setParticles = (on: boolean) => go((u) => (on ? u.searchParams.set('particles', 'on') : u.searchParams.delete('particles')))
   const setFx = (v: string) => go((u) => (v === 'none' ? u.searchParams.delete('fx') : u.searchParams.set('fx', v)))
   const setPalette = (v: BrainPalette) => go((u) => (v === DEFAULT_BRAIN_PALETTE ? u.searchParams.delete('palette') : u.searchParams.set('palette', v)))
+  const setLayout = (v: string) => go((u) => (v === 'wide' ? u.searchParams.delete('layout') : u.searchParams.set('layout', v)))
 
   return (
     <details
@@ -73,8 +76,16 @@ export function HeroLab() {
             ))}
           </div>
         </div>
+        <div className="flex items-start gap-2">
+          <span className="mt-1 w-16 shrink-0 text-[0.58rem] uppercase tracking-[0.14em] text-foreground/40">Layout</span>
+          <div className="flex flex-wrap gap-1">
+            {LAYOUTS.map((v) => (
+              <Btn key={v} active={layout === v} onClick={() => setLayout(v)}>{v}</Btn>
+            ))}
+          </div>
+        </div>
         <p className="text-[0.56rem] leading-snug text-foreground/35">
-          cursor = move mouse over brain · entrance = reloads to assemble · colour = abyss is most integrated · combinable
+          cursor = move mouse over brain · entrance = reloads to assemble · layout = wide spreads + bleeds the brain · combinable
         </p>
       </div>
     </details>

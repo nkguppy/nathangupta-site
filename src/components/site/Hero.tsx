@@ -36,6 +36,11 @@ export function Hero() {
   // more premium). Kept fully wired for optionality — DEV `?particles=on` brings it
   // back so it can be re-evaluated (and a scroll-fade-out added) before re-enabling.
   const showParticles = import.meta.env.DEV && params?.get('particles') === 'on'
+  // Hero layout: 'wide' (default, shipped) gives the text more width and enlarges the
+  // brain so it bleeds off the right edge — the composition spreads across the viewport
+  // instead of clustering centrally, while the text stays aligned to the nav gutter.
+  // DEV `?layout=even` = the prior centred composition, for live comparison.
+  const layout = import.meta.env.DEV ? (params?.get('layout') === 'even' ? 'even' : 'wide') : 'wide'
 
   // Staggered fade-in for the hero content, plus a scrubbed parallax exit. The
   // brain drifts at a different rate so the hero separates in depth as the
@@ -95,7 +100,7 @@ export function Hero() {
 
         {/* Content (left) sits above the brain field */}
         <div ref={contentRef} className="section relative z-10 w-full">
-          <div className="mx-auto max-w-[640px] text-center lg:mx-0 lg:text-left">
+          <div className={cn('mx-auto max-w-[640px] text-center lg:mx-0 lg:text-left', layout === 'wide' && 'lg:max-w-[46rem]')}>
             {/* Identity row: small circular headshot + role. Centred on mobile,
                 left-aligned beside the sphere on desktop. */}
             <div data-hero-fade className="mb-8 flex items-center justify-center gap-3.5 lg:justify-start">
@@ -162,7 +167,10 @@ export function Hero() {
         <div
           ref={brainRef}
           aria-hidden
-          className="pointer-events-none hidden lg:absolute lg:inset-y-0 lg:right-[4%] lg:block lg:h-auto lg:w-[52%] lg:[-webkit-mask-image:linear-gradient(to_right,transparent,#000_26%)] lg:[mask-image:linear-gradient(to_right,transparent,#000_26%)]"
+          className={cn(
+            'pointer-events-none hidden lg:absolute lg:inset-y-0 lg:block lg:h-auto lg:[-webkit-mask-image:linear-gradient(to_right,transparent,#000_26%)] lg:[mask-image:linear-gradient(to_right,transparent,#000_26%)]',
+            layout === 'wide' ? 'lg:right-[-6%] lg:w-[62%]' : 'lg:right-[4%] lg:w-[52%]',
+          )}
         >
           <HeroGraphic />
         </div>
