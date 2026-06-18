@@ -9,6 +9,8 @@ import { useSplitReveal } from '@/hooks/useSplitReveal'
 import { MagneticButton } from '@/components/primitives/MagneticButton'
 import { HeroSocials } from '@/components/site/HeroSocials'
 import { HeroGraphic } from '@/components/site/HeroGraphic'
+import { HeroParticles } from '@/components/site/HeroParticles'
+import { HeroLab } from '@/components/site/HeroLab'
 import { cn } from '@/lib/utils'
 
 export function Hero() {
@@ -30,6 +32,10 @@ export function Hero() {
   const headline = headlineCandidates[hIdx]
   const heroKicker = headline.kicker ?? hero.kicker
   const heroSubhead = headline.subhead ?? hero.subhead
+  // Background particle field is OFF by default (Nathan 2026-06-18: brain-alone reads
+  // more premium). Kept fully wired for optionality — DEV `?particles=on` brings it
+  // back so it can be re-evaluated (and a scroll-fade-out added) before re-enabling.
+  const showParticles = import.meta.env.DEV && params?.get('particles') === 'on'
 
   // Staggered fade-in for the hero content, plus a scrubbed parallax exit. The
   // brain drifts at a different rate so the hero separates in depth as the
@@ -83,6 +89,10 @@ export function Hero() {
         id="top"
         className="relative flex min-h-[86svh] flex-col justify-center overflow-hidden pb-20 pt-28 lg:min-h-[100svh] lg:pb-0 lg:pt-0"
       >
+        {/* Hero-wide drifting particle field — fills the whole hero, behind the
+            content + brain (first child + no z-index → painted underneath). */}
+        {showParticles && <HeroParticles className="pointer-events-none absolute inset-0 h-full w-full" />}
+
         {/* Content (left) sits above the brain field */}
         <div ref={contentRef} className="section relative z-10 w-full">
           <div className="mx-auto max-w-[640px] text-center lg:mx-0 lg:text-left">
@@ -199,6 +209,7 @@ export function Hero() {
           </div>
         </details>
       )}
+      <HeroLab />
     </>
   )
 }

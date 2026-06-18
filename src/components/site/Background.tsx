@@ -53,11 +53,12 @@ export function Background() {
     let h = 0
     let raf = 0
 
-    let isDark = document.documentElement.classList.contains('dark')
+    // watch data-theme (set by useTheme), not class — Lenis churns classes on every scroll frame
+    let isDark = document.documentElement.getAttribute('data-theme') !== 'light'
     const themeObserver = new MutationObserver(() => {
-      isDark = document.documentElement.classList.contains('dark')
+      isDark = document.documentElement.getAttribute('data-theme') !== 'light'
     })
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
     const resize = () => {
       w = Math.max(1, Math.floor(window.innerWidth * SCALE))

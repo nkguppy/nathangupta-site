@@ -31,3 +31,4 @@ handoff.md
 *.njsproj
 *.sln
 *.sw?
+assets/

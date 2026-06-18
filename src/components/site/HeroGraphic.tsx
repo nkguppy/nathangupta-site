@@ -1,16 +1,32 @@
-import { useState } from 'react'
+import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { ErrorBoundary } from '@/components/site/ErrorBoundary'
 import PialBrain from '@/components/site/PialBrain'
+import type { NeuronFx } from '@/components/site/brainNeurons'
+import { DEFAULT_BRAIN_PALETTE, isBrainPalette, type BrainPalette } from '@/components/site/brainPalettes'
 import { cn } from '@/lib/utils'
 
 /**
- * Hero graphic — a real cortical-surface particle brain (PialBrain) over a
- * static SVG base/fallback. The SVG shows under no-JS / before the first canvas
- * frame and fades out once the canvas confirms a frame (never a white box). On
- * load the canvas assembles from a sphere into the brain (the page-load
- * transition). Reduced motion → PialBrain holds a still brain (no spin, no morph).
+ * Hero graphic — a glowing cortical-surface brain over a static SVG base/fallback.
+ *
+ * On a WebGL-capable desktop it renders the real 3D surface brain (SurfaceBrain,
+ * lazy-loaded so three.js is a separate chunk). Everywhere else — mobile/tablet,
+ * reduced motion, no WebGL2, a lost GL context, or any render error — it falls
+ * back to the lightweight 2D-canvas PialBrain. So there is always a visible brain,
+ * never a white box or an error card. The SVG shows under no-JS / before the first
+ * canvas frame and fades once a frame is confirmed.
  */
+
+function hasWebGL2(): boolean {
+  if (typeof window === 'undefined') return false
+  try {
+    return !!document.createElement('canvas').getContext('webgl2')
+  } catch {
+    return false
+  }
+}
+
+const SurfaceBrain = lazy(() => import('@/components/site/SurfaceBrain'))
 
 // Static fallback: a small linked-node ring (shown only pre-frame / no-JS).
 const FB = Array.from({ length: 16 }, (_, i) => {
@@ -22,8 +38,50 @@ const FB = Array.from({ length: 16 }, (_, i) => {
 export function HeroGraphic({ className }: { className?: string }) {
   const reduced = useReducedMotion()
   const [ready, setReady] = useState(false)
+  const [webglFailed, setWebglFailed] = useState(false)
   const [quality] = useState<'high' | 'low'>(() =>
     typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches ? 'low' : 'high',
+  )
+  // Only spin up WebGL on a capable desktop (≥lg, where the wrapper is visible) and
+  // when motion is allowed — otherwise the 2D PialBrain (no 9.4 MB mesh) is used.
+  const desktop = useMemo(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+    [],
+  )
+  const canWebGL = useMemo(() => hasWebGL2(), [])
+  // DEV-only exploration: ?fx=cursor|ambient|entrance adds a neuron/synapse overlay
+  // to the 3D brain so the effect can be compared live. Production = 'none'.
+  const fx = useMemo<NeuronFx>(() => {
+    if (!import.meta.env.DEV || typeof window === 'undefined') return 'none'
+    const v = new URLSearchParams(window.location.search).get('fx')
+    return v === 'cursor' || v === 'ambient' || v === 'entrance' ? v : 'none'
+  }, [])
+  // DEV-only exploration: ?palette=iris|amethyst|abyss|cyan recolours the brain so the
+  // harsh-white-vs-integrated trade-off can be compared live. Production = default.
+  const palette = useMemo<BrainPalette>(() => {
+    if (!import.meta.env.DEV || typeof window === 'undefined') return DEFAULT_BRAIN_PALETTE
+    const v = new URLSearchParams(window.location.search).get('palette')
+    return isBrainPalette(v) ? v : DEFAULT_BRAIN_PALETTE
+  }, [])
+  // The additive glow brain is a DARK-theme feature: over a light background it can
+  // only darken (no headroom to add light), leaving a dark halo. So in light theme
+  // fall back to the 2D PialBrain (the existing baseline there). Observe the `dark`
+  // class so a runtime theme toggle swaps cleanly (useTheme state is per-instance).
+  const [isDark, setIsDark] = useState(
+    () => typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') !== 'light',
+  )
+  useEffect(() => {
+    const el = document.documentElement
+    // watch data-theme (set by useTheme), not class — Lenis churns classes on every scroll
+    const obs = new MutationObserver(() => setIsDark(el.getAttribute('data-theme') !== 'light'))
+    obs.observe(el, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => obs.disconnect()
+  }, [])
+  const useSurface = !reduced && desktop && canWebGL && isDark && !webglFailed
+
+  const brainClass = cn(
+    'absolute inset-0 size-full transition-opacity duration-700 ease-[var(--ease-quart)]',
+    ready ? 'opacity-100' : 'opacity-0',
   )
 
   return (
@@ -32,10 +90,10 @@ export function HeroGraphic({ className }: { className?: string }) {
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 motion-safe:animate-[brainglow_7s_ease-in-out_infinite]"
-        style={{ background: 'radial-gradient(46% 44% at 50% 50%, oklch(0.7 0.146 276 / 0.20), transparent 70%)' }}
+        style={{ background: 'radial-gradient(46% 44% at 50% 50%, oklch(0.7 0.146 276 / 0.13), transparent 70%)' }}
       />
 
-      {/* static fallback — base layer; fades when the canvas confirms a frame */}
+      {/* static fallback — base layer; fades when a canvas confirms a frame */}
       <svg
         viewBox="0 0 200 200"
         preserveAspectRatio="xMidYMid meet"
@@ -44,7 +102,7 @@ export function HeroGraphic({ className }: { className?: string }) {
           ready ? 'opacity-0' : 'opacity-100',
         )}
         role="img"
-        aria-label="An interactive particle brain"
+        aria-label="An interactive brain"
       >
         <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" strokeWidth="0.6" strokeOpacity="0.18" />
         <g stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.3" fill="none" strokeLinecap="round">
@@ -64,17 +122,27 @@ export function HeroGraphic({ className }: { className?: string }) {
         </g>
       </svg>
 
-      {/* interactive cortical-surface brain — invisible until it confirms a frame */}
-      <ErrorBoundary fallback={null}>
-        <PialBrain
-          reduced={reduced}
-          quality={quality}
-          onReady={() => setReady(true)}
-          className={cn(
-            'absolute inset-0 size-full transition-opacity duration-700 ease-[var(--ease-quart)]',
-            ready ? 'opacity-100' : 'opacity-0',
-          )}
-        />
+      {/* interactive brain — invisible until it confirms a frame. WebGL surface on
+          capable desktop, else the 2D PialBrain. Any crash → PialBrain via the boundary. */}
+      <ErrorBoundary
+        fallback={
+          <PialBrain reduced={reduced} quality={quality} onReady={() => setReady(true)} className={brainClass} />
+        }
+      >
+        {useSurface ? (
+          <Suspense fallback={null}>
+            <SurfaceBrain
+              reduced={false}
+              fx={fx}
+              palette={palette}
+              onReady={() => setReady(true)}
+              onContextLost={() => setWebglFailed(true)}
+              className={brainClass}
+            />
+          </Suspense>
+        ) : (
+          <PialBrain reduced={reduced} quality={quality} onReady={() => setReady(true)} className={brainClass} />
+        )}
       </ErrorBoundary>
     </div>
   )
