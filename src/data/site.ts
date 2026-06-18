@@ -34,7 +34,7 @@ export const nav = [
 export const hero = {
   kicker: `${profile.role} @ ${profile.org}`,
   subhead:
-    'I bring the science of the brain to how organisations can perform at their best, across the individual, their teams, and the workplace they do it in.',
+    'I bring the science of the brain to how people and organisations perform at work — across the individual, the team, and the workplace itself.',
   primaryCta: { label: 'Explore my work', to: '/work' },
   secondaryCta: { label: 'Read my writing', to: '/writing' },
   // Small optimised webp (176px) for the identity chip in the hero.
@@ -106,7 +106,7 @@ export type Layer = {
 export const framework = {
   heading: 'Performance has three layers',
   intro:
-    'Great work never comes from a single lever. I work across three layers, from the one brain doing the thinking to the building it sits in, with a through-line running through all of them: a genuinely better experience of work.',
+    'No single thing makes work better. I work across three layers, from the one brain doing the thinking to the building it sits in, and one aim ties them together: a better experience of work.',
   layers: [
     {
       id: 'individual',
@@ -333,7 +333,7 @@ export const posts: readonly Post[] = [
     featured: true,
     body: [
       { kind: 'p', text: 'When someone struggles to concentrate, we tend to reach for a verdict about the person. They lack discipline. They have a short attention span. They are not focused. It is a tidy story, and it is mostly wrong.' },
-      { kind: 'p', text: 'Attention is not a fixed quantity you were handed at birth. It is a state the brain enters when a particular set of conditions line up: a clear goal, a task that meets you at the edge of your ability, and an environment that is not constantly asking for a piece of you. Take those away and even a disciplined mind scatters. Put them back and concentration tends to return on its own.' },
+      { kind: 'p', text: 'Attention is something the brain does when a particular set of conditions line up: a clear goal, a task that meets you at the edge of your ability, and an environment that is not constantly asking for a piece of you. Take those away and even a disciplined mind scatters. Put them back and concentration tends to return on its own.' },
       { kind: 'h2', text: 'The environment does the deciding' },
       { kind: 'p', text: 'Most offices, and most calendars, are arranged in a way that makes deep concentration the exception. An interruption every few minutes does not cost you only the minutes. It costs the climb back to where you were, and that climb is far longer than the interruption that triggered it.' },
       { kind: 'quote', text: 'The question is rarely whether someone can focus. It is whether anything around them will let them.' },
@@ -361,7 +361,7 @@ export const posts: readonly Post[] = [
   {
     slug: 'your-brain-on-infinite-scroll',
     title: 'Your brain on infinite scroll',
-    dek: 'The feed is not weak willpower meeting a neutral tool. It is a system built by people who understand your attention better than you do.',
+    dek: 'We blame the feed on weak willpower. Really it is a system built by people who understand your attention better than you do.',
     kind: 'note',
     topic: 'AI & the mind',
     date: '2026-03-22',
@@ -370,9 +370,9 @@ export const posts: readonly Post[] = [
     lqip: 'linear-gradient(135deg, oklch(0.76 0.07 200), oklch(0.46 0.09 208))',
     body: [
       { kind: 'p', text: 'It is tempting to frame compulsive scrolling as a personal failing: if you had more discipline, you would put the phone down. That framing is convenient for everyone except you, because it points the blame inward and leaves the machine untouched.' },
-      { kind: 'p', text: 'The feed is engineered. Variable rewards, the small unpredictable hit that keeps a slot machine player seated, are not a side effect of these products. They are the product. Your attention is the thing being optimised for, by teams who measure their success in the seconds they can keep you.' },
+      { kind: 'p', text: 'The feed is engineered. Variable rewards, the small unpredictable hit that keeps a slot-machine player seated, are deliberate. They are the product, and your attention is what the teams behind them optimise for, measured in the seconds they can keep you.' },
       { kind: 'quote', text: 'You are not weak. You are outnumbered.' },
-      { kind: 'p', text: 'Knowing this does not break the spell by itself, but it changes the task. The goal is not to win a willpower contest against a system designed to beat it. It is to change the conditions: more friction between you and the feed, fewer reasons to open it, a few corners of the day it is not allowed into. You move the furniture rather than fighting the gravity.' },
+      { kind: 'p', text: 'Knowing this does not break the spell by itself, but it changes the task. Rather than trying to win a willpower contest against a system designed to beat it, you change the conditions: more friction between you and the feed, fewer reasons to open it, a few corners of the day it is not allowed into. You move the furniture rather than fighting the gravity.' },
     ],
   },
   {
@@ -386,10 +386,10 @@ export const posts: readonly Post[] = [
     cover: '/covers/essay-scan.svg',
     lqip: 'linear-gradient(135deg, oklch(0.76 0.07 215), oklch(0.46 0.1 228))',
     body: [
-      { kind: 'p', text: 'Ask what an office is for and most answers are about people being together. Fair enough. But a great deal of what happens at work is not collaboration. It is one person, thinking hard, trying to hold a problem in their head long enough to solve it. We design for the first thing and quietly punish the second.' },
+      { kind: 'p', text: 'Ask what an office is for and most answers are about people being together. Fair enough. But a great deal of what happens at work has nothing to do with collaboration. It is one person, thinking hard, trying to hold a problem in their head long enough to solve it. We design for the first thing and quietly punish the second.' },
       { kind: 'p', text: 'The open plan is the clearest example. It optimises for visible activity and easy interruption, both of which feel like productivity and neither of which is the same as thinking. A space that is good for a brain doing hard work looks different: it gives people somewhere to go quiet, somewhere to be loud, and the freedom to choose between them as the work demands.' },
       { kind: 'h2', text: 'Hybrid did not settle this' },
-      { kind: 'p', text: 'Working from home solved the interruption problem for some people and created a connection problem for others. The lesson was not that one location wins. It was that focus and collaboration are different modes with different needs, and a workplace that pretends they are the same will serve neither well.' },
+      { kind: 'p', text: 'Working from home solved the interruption problem for some people and created a connection problem for others. The lesson had nothing to do with which location wins. Focus and collaboration are different modes with different needs, and a workplace that pretends otherwise will serve neither well.' },
       { kind: 'quote', text: 'The best test of a workspace is simple: can someone do their hardest thinking here? Most fail it.' },
       { kind: 'p', text: 'None of this requires a grand redesign. It requires taking the thinking seriously as a thing that needs conditions, and then protecting those conditions with the same care we give to the parts of work that are easier to see.' },
     ],
@@ -424,7 +424,7 @@ export const posts: readonly Post[] = [
       { kind: 'p', text: 'We treat the feeling of being sure as evidence that we are right. It is not. Confidence and accuracy are produced by different machinery in the brain, and they come apart more often than is comfortable to admit.' },
       { kind: 'p', text: 'The work on metacognition — the mind watching its own judgement — keeps finding the same gap. People can be entirely certain and entirely wrong, and the certainty offers no warning. Worse, the feeling of fluency, of a decision coming easily, reads to us as a sign of quality when it is often just a sign of familiarity.' },
       { kind: 'quote', text: 'The strongest feeling of certainty and the worst decision can sit side by side, and from the inside they feel identical.' },
-      { kind: 'p', text: 'This is not an argument for second-guessing everything. It is an argument for treating the feeling of certainty as one input rather than the verdict. The useful habit is to ask what would have to be true for you to be wrong, and to notice whether you can answer. A good decision does not always feel certain. Often it just feels examined.' },
+      { kind: 'p', text: 'None of this calls for second-guessing everything. The useful habit is to treat the feeling of certainty as one input rather than the verdict: ask what would have to be true for you to be wrong, and notice whether you can answer. A good decision does not always feel certain. Often it just feels examined.' },
     ],
   },
 ]
@@ -433,11 +433,11 @@ export const posts: readonly Post[] = [
 
 export const about = {
   eyebrow: 'About',
-  lead: 'I am a Cognitive Neuroscientist. In plain terms, I study how people think at their best, and what gets in the way.',
+  lead: 'I am a Cognitive Neuroscientist. I study how people think at their best, and what gets in the way.',
   paragraphs: [
     'I spent the first part of my career in psychology and neuroscience — a first-class degree in cognitive psychology, then a master’s in cognition and neuroscience, then research posts spanning health and wellbeing, digital addiction, the overlap between AI and the way real neural networks learn, and the conditions for flow and individual performance. About a decade in the science of the mind, all told.',
     'Then a question started to nag. We spend a third of our lives, often more, at work, and most of that work is now done inside cognitively demanding environments that nobody designed with a brain in mind. The science I cared about was sitting in journals while the place it could help most was running on guesswork. So I moved it.',
-    'For the last few years I have been at AWA doing exactly that: building the tools, programmes and research that bring brain science into the working day. My work runs across three layers — the individual, the team and its culture, and the workplace itself — and underneath all of it is one interest. Not just performance, but a better experience of work entirely: people who are motivated, well, and able to do their sharpest thinking.',
+    'For the last few years I have been at AWA doing exactly that: building the tools, programmes and research that bring brain science into the working day. My work runs across three layers — the individual, the team and its culture, and the workplace itself — and one interest sits underneath all of it. I care about performance, but even more about the experience of work: people who are motivated, well, and able to do their sharpest thinking.',
     'I also write and speak, because I think the science is too useful to leave where only specialists can reach it. Most of what I publish is an attempt to take something true about the mind and make it useful out loud.',
   ],
   facts: [
