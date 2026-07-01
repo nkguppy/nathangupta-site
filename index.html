@@ -6,8 +6,9 @@
     <meta name="color-scheme" content="light dark" />
 
     <!-- TEMP (2026-06-15): keep the half-built site out of search results while
-         content below the hero is placeholder. REMOVE this line at public launch
-         (also delete public/_headers). See handoff.md. -->
+         content below the hero is placeholder. At public launch REMOVE this meta
+         line AND, in public/_headers, ONLY the trailing `/*` X-Robots-Tag stanza —
+         the cache rules above it must remain. Then rebuild + push. See handoff.md. -->
     <meta name="robots" content="noindex, nofollow" />
 
     <title>Nathan Gupta · Cognitive Neuroscientist at AWA</title>
@@ -19,7 +20,7 @@
     <meta name="theme-color" content="#16171A" media="(prefers-color-scheme: dark)" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48 32x32 16x16" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
@@ -27,7 +28,7 @@
     <meta property="og:title" content="Nathan Gupta · Cognitive Neuroscientist at AWA" />
     <meta
       property="og:description"
-      content="Bringing the science of the brain to how people, teams and workplaces perform at their best."
+      content="Bringing the science of the brain to how people, teams and workplaces perform — and writing on the mind in the modern world."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://nathangupta.com/" />
@@ -74,15 +75,25 @@
         var el = document.documentElement
         el.classList.add('js')
         if ('scrollRestoration' in history) history.scrollRestoration = 'manual'
+        var saved = 'dark'
         try {
-          var saved = localStorage.getItem('ng-theme')
+          var pref = localStorage.getItem('ng-theme')
           // Graphite ships dark by default; only an explicit saved pref opts out.
-          if (saved !== 'light' && saved !== 'dark') saved = 'dark'
-          el.setAttribute('data-theme', saved)
-          el.classList.toggle('dark', saved === 'dark')
+          if (pref === 'light' || pref === 'dark') saved = pref
         } catch (e) {
-          el.setAttribute('data-theme', 'dark')
-          el.classList.add('dark')
+          /* storage unavailable → dark default */
+        }
+        el.setAttribute('data-theme', saved)
+        el.classList.toggle('dark', saved === 'dark')
+        // The theme-color metas above are keyed to the OS scheme, but the page
+        // theme is ours (dark by default) — sync both tags to the APPLIED theme
+        // so a light-OS phone doesn't get a near-white browser chrome over the
+        // graphite canvas. useTheme keeps them in sync after any toggle.
+        var META = { light: '#FAFAFB', dark: '#16171A' }
+        var metas = document.querySelectorAll('meta[name="theme-color"]')
+        for (var i = 0; i < metas.length; i++) {
+          metas[i].setAttribute('content', META[saved])
+          metas[i].removeAttribute('media')
         }
       })()
     </script>

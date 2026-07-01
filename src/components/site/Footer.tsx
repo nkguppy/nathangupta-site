@@ -6,7 +6,7 @@ import { SocialRow } from '@/components/site/Socials'
 
 export function Footer() {
   const { scrollTo } = useSmoothScroll()
-  const year = 2026
+  const year = new Date().getFullYear()
 
   return (
     <footer className="border-t border-border">

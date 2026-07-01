@@ -1,8 +1,10 @@
 # NOTE (2026-06-15): this file is deliberately permissive, but the site is held
 # out of search by a TEMP noindex (the <meta name="robots"> in index.html and
 # X-Robots-Tag in public/_headers). Those noindex signals are authoritative while
-# content is still placeholder. At public launch, remove that meta + _headers —
-# this file is then already correct (Allow + sitemap), so nothing to change here.
+# content is still placeholder. At public launch, remove that meta line in
+# index.html and ONLY the trailing `/*` X-Robots-Tag stanza in public/_headers
+# (the cache rules there must remain). This file is then already correct
+# (Allow + sitemap), so nothing to change here.
 User-agent: *
 Allow: /
 

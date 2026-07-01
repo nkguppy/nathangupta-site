@@ -459,8 +459,9 @@ export const contact = {
   primaryCta: { label: 'Email me', href: `mailto:${profile.email}` },
 } as const
 
-// Only real, live links — Email and LinkedIn. (Scholar/Bluesky dropped per the
-// brand brief; X/Substack/etc. join the hero row once Nathan supplies handles.)
+// Only real, live links — Email and LinkedIn here (footer/contact/about).
+// The hero row carries the full live set (LinkedIn/X/Substack/YouTube/Instagram,
+// wired 2026-06-15 via heroSocials above). Scholar/Bluesky dropped per the brief.
 export type SocialLink = {
   label: string
   href: string
