@@ -1,11 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-
-const ORIGIN = 'https://nathangupta.com'
-const SUFFIX = 'Nathan Gupta'
-const DEFAULT_TITLE = 'Nathan Gupta · Cognitive Neuroscientist at AWA'
-const DEFAULT_DESCRIPTION =
-  'Nathan Gupta is a Cognitive Neuroscientist at AWA, bringing the science of the brain to how people and organisations perform — across the individual, the team, and the workplace.'
+import { seo } from '@/data/site'
+import { ogAltForTitle, ogImageForPath } from '@/lib/og'
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`)
@@ -28,30 +24,51 @@ function setCanonical(href: string) {
 }
 
 /**
- * Per-route document title, description, social card and canonical URL for this
- * SPA (no SSR). Pass a page title and description; the document title becomes
- * "<title> · Nathan Gupta", or the full default on the home route. og:url and the
- * canonical link track the actual path, so a shared deep link resolves to itself
- * rather than the homepage.
+ * Per-route document title, description, social card and canonical URL for the
+ * client-side head. Pass a page title and description; the document title
+ * becomes "<title> · Nathan Gupta", or the full default on the home route.
+ * og:url and the canonical link track the actual path, so a shared deep link
+ * resolves to itself rather than the homepage. og:image/twitter:image default
+ * to the route's generated share card (src/lib/og.ts → public/og/); pass
+ * `image` to override.
+ *
+ * Crawlers and JS-less scrapers never run this hook — they read the per-route
+ * static head baked into dist/<route>/index.html by scripts/prerender.ts at
+ * build time, which shares seo/ogImageForPath so the two stay in lockstep.
  */
-export function usePageMeta({ title, description }: { title?: string; description?: string }) {
+export function usePageMeta({
+  title,
+  description,
+  image,
+}: {
+  title?: string
+  description?: string
+  image?: string
+}) {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    document.title = title ? `${title} · ${SUFFIX}` : DEFAULT_TITLE
-    const desc = description ?? DEFAULT_DESCRIPTION
-    const url = pathname === '/' ? `${ORIGIN}/` : `${ORIGIN}${pathname}`
+    document.title = title ? `${title} · ${seo.titleSuffix}` : seo.defaultTitle
+    const desc = description ?? seo.defaultDescription
+    const url = pathname === '/' ? `${seo.origin}/` : `${seo.origin}${pathname}`
+    const img = `${seo.origin}${image ?? ogImageForPath(pathname)}`
 
     setMeta('name', 'description', desc)
     setMeta('property', 'og:title', document.title)
     setMeta('property', 'og:description', desc)
     setMeta('property', 'og:url', url)
+    setMeta('property', 'og:image', img)
+    setMeta('property', 'og:image:alt', ogAltForTitle(title))
     setMeta('name', 'twitter:title', document.title)
     setMeta('name', 'twitter:description', desc)
-    // og:image is intentionally NOT set per-route: the static branded card from
-    // index.html (og.png) carries every route for v1. Per-post OG cards are a
-    // deferred nice-to-have — worth generating once the essays are Nathan's final
-    // pieces rather than placeholders (recipe: scripts/og-source.svg + rsvg).
+    setMeta('name', 'twitter:image', img)
     setCanonical(url)
-  }, [title, description, pathname])
+
+    // Prerendered post HTML carries article:* metas + a BlogPosting JSON-LD
+    // for scrapers. They describe only the URL that served the HTML, so drop
+    // them once the SPA owns the head (crawlers fetch each URL fresh).
+    document.head
+      .querySelectorAll('meta[property^="article:"], script#post-jsonld')
+      .forEach((el) => el.remove())
+  }, [title, description, image, pathname])
 }

@@ -31,3 +31,6 @@ handoff.md
 *.njsproj
 *.sln
 *.sw?
+
+# local font cache for the OG-card generator (npm run og)
+scripts/fonts/

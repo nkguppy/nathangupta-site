@@ -9,6 +9,11 @@
 /covers/*
   Cache-Control: public, max-age=31536000, immutable
 
+# Share cards (public/og/) regenerate IN PLACE when a title changes — they are
+# NOT content-hashed, so cache for a day only, never immutable.
+/og/*
+  Cache-Control: public, max-age=86400
+
 # TEMP (2026-06-15) — keep the half-built site out of search while the content is
 # placeholder. At public launch remove ONLY this /* stanza (and the
 # <meta name="robots"> line in index.html). The cache rules above must remain.

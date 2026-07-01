@@ -23,6 +23,17 @@ export const links = {
   awa: 'https://www.advanced-workplace.com/team-member/nathan-gupta/',
 } as const
 
+// Shared SEO defaults — the single source of truth for the runtime head
+// (hooks/usePageMeta.ts) and the build-time prerender (scripts/prerender.ts).
+// This file must stay dependency-free: the prerender imports it under plain Node.
+export const seo = {
+  origin: 'https://nathangupta.com',
+  titleSuffix: 'Nathan Gupta',
+  defaultTitle: 'Nathan Gupta · Cognitive Neuroscientist at AWA',
+  defaultDescription:
+    'Nathan Gupta is a Cognitive Neuroscientist at AWA, bringing the science of the brain to how people and organisations perform — across the individual, the team, and the workplace.',
+} as const
+
 // Primary nav now routes to real pages (hybrid model: a rich scrolling home plus
 // dedicated, linkable pages). `to` values are router paths.
 export const nav = [
