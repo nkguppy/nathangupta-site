@@ -9,6 +9,7 @@ import { useSplitReveal } from '@/hooks/useSplitReveal'
 import { MagneticButton } from '@/components/primitives/MagneticButton'
 import { HeroSocials } from '@/components/site/HeroSocials'
 import { HeroGraphic } from '@/components/site/HeroGraphic'
+import { HeroBrainMobile } from '@/components/site/HeroBrainMobile'
 import { HeroParticles } from '@/components/site/HeroParticles'
 import { HeroLab } from '@/components/site/HeroLab'
 import { cn } from '@/lib/utils'
@@ -69,14 +70,14 @@ export function Hero() {
         ease: 'none',
         scrollTrigger: { trigger: section, start: 'top top', end: 'bottom top', scrub: true },
       })
-      if (brainRef.current) {
-        gsap.to(brainRef.current, {
-          yPercent: -8,
-          opacity: 0.2,
-          ease: 'none',
-          scrollTrigger: { trigger: section, start: 'top top', end: 'bottom top', scrub: true },
-        })
-      }
+      // Both brain layers (desktop wrapper + mobile backdrop) share the
+      // scrubbed exit; the selector is scoped to this section's context.
+      gsap.to('[data-hero-brain]', {
+        yPercent: -8,
+        opacity: 0.2,
+        ease: 'none',
+        scrollTrigger: { trigger: section, start: 'top top', end: 'bottom top', scrub: true },
+      })
     }, section)
     return () => ctx.revert()
   }, [reduced])
@@ -97,6 +98,10 @@ export function Hero() {
         {/* Hero-wide drifting particle field — fills the whole hero, behind the
             content + brain (first child + no z-index → painted underneath). */}
         {showParticles && <HeroParticles className="pointer-events-none absolute inset-0 h-full w-full" />}
+
+        {/* Mobile brain backdrop (<lg only) — masked, dialled-down PialBrain
+            behind the headline; desktop path is untouched. See HeroBrainMobile. */}
+        <HeroBrainMobile />
 
         {/* Content (left) sits above the brain field */}
         <div ref={contentRef} className="section relative z-10 w-full">
@@ -166,6 +171,7 @@ export function Hero() {
             left-edge mask so it never crowds the headline. pointer-events-none. */}
         <div
           ref={brainRef}
+          data-hero-brain
           aria-hidden
           className={cn(
             'pointer-events-none hidden lg:absolute lg:inset-y-0 lg:block lg:h-auto lg:[-webkit-mask-image:linear-gradient(to_right,transparent,#000_26%)] lg:[mask-image:linear-gradient(to_right,transparent,#000_26%)]',

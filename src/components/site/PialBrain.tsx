@@ -23,7 +23,23 @@ const BACKFADE = 0.8
 const SPINMUL = 1.5
 const LINES = true
 
-type Props = { reduced?: boolean; quality?: 'high' | 'low'; onReady?: () => void; className?: string }
+type Props = {
+  reduced?: boolean
+  quality?: 'high' | 'low'
+  onReady?: () => void
+  className?: string
+  /** Point count override (≤ PIAL_N). Default: quality logic (low→3000, high→all). */
+  density?: number
+  /** Spin-rate multiplier on the locked 1.5× look. Default 1. */
+  spin?: number
+  /** Cap redraws to N fps (0 = uncapped native rAF). Default 0. */
+  fpsCap?: number
+  /** Ambient drifting motes count. Default 320; 0 disables the field. */
+  ambient?: number
+  /** Cursor pull + wiring. Default true; false also skips the pointer listeners
+   *  (on touch devices pointermove fires during scroll-drags). */
+  interactive?: boolean
+}
 
 function makeGlow(rgb: string, size: number, inner: number): HTMLCanvasElement {
   const c = document.createElement('canvas')
@@ -38,7 +54,17 @@ function makeGlow(rgb: string, size: number, inner: number): HTMLCanvasElement {
   return c
 }
 
-export default function PialBrain({ reduced = false, quality = 'high', onReady, className }: Props) {
+export default function PialBrain({
+  reduced = false,
+  quality = 'high',
+  onReady,
+  className,
+  density,
+  spin: spinMul = 1,
+  fpsCap = 0,
+  ambient = 320,
+  interactive = true,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const readyRef = useRef(onReady)
   useEffect(() => { readyRef.current = onReady }, [onReady])
@@ -55,13 +81,13 @@ export default function PialBrain({ reduced = false, quality = 'high', onReady, 
     const S = fibonacciSphere(PIAL_N)
     const E = LINES ? buildFoldEdges(P) : { a: new Int32Array(0), b: new Int32Array(0) }
     const EN = E.a.length
-    const drawN = quality === 'low' ? Math.min(3000, PIAL_N) : PIAL_N
+    const drawN = Math.min(density ?? (quality === 'low' ? 3000 : PIAL_N), PIAL_N)
 
     const rad = new Float32Array(PIAL_N)
     const halo = new Uint8Array(PIAL_N)
     for (let i = 0; i < PIAL_N; i++) { rad[i] = 0.6 + Math.random() * 0.8; halo[i] = Math.random() < 0.15 ? 1 : 0 }
 
-    const AM = 320
+    const AM = Math.max(0, ambient)
     const amx = new Float32Array(AM), amy = new Float32Array(AM), amz = new Float32Array(AM), amp = new Float32Array(AM), ams = new Float32Array(AM)
     for (let i = 0; i < AM; i++) { amx[i] = (Math.random() * 2 - 1) * 1.8; amy[i] = (Math.random() * 2 - 1) * 1.4; amz[i] = (Math.random() * 2 - 1) * 1.8; amp[i] = Math.random() * 6.283; ams[i] = 0.4 + Math.random() * 0.9 }
 
@@ -93,13 +119,22 @@ export default function PialBrain({ reduced = false, quality = 'high', onReady, 
     const target = 1
     let last = performance.now(), ang = 0, first = true
     let raf = 0
+    let lastDraw = 0
 
     const frame = (now: number) => {
+      // fps cap: skip the redraw but keep the loop alive (dt accumulates and is
+      // clamped at 0.05s, so motion stays correct at any cap). Never skip under
+      // reduced motion — those single frames (mount/resize) must always draw.
+      if (!reduced && fpsCap > 0 && now - lastDraw < 1000 / fpsCap - 2 && !first) {
+        raf = requestAnimationFrame(frame)
+        return
+      }
+      lastDraw = now
       const dt = Math.min(0.05, (now - last) / 1000); last = now
       if (morphT < target) morphT = Math.min(target, morphT + dt / 1.7)
       const e = smooth(morphT)
       const persp = 0.45 + 0.18 * e, tilt = 0.5 - 0.22 * e
-      const spin = reduced ? 0 : (0.05 - 0.006 * e) * SPINMUL
+      const spin = reduced ? 0 : (0.05 - 0.006 * e) * SPINMUL * spinMul
       const depthDim = 0.42 - 0.12 * e, baseAlpha = 0.5
       ang += spin * dt
       const cosA = Math.cos(ang), sinA = Math.sin(ang), cosT = Math.cos(tilt), sinT = Math.sin(tilt)
@@ -194,8 +229,10 @@ export default function PialBrain({ reduced = false, quality = 'high', onReady, 
     }
 
     // animated: cursor interaction + pause off-screen / when hidden
-    window.addEventListener('pointermove', onMove, { passive: true })
-    parent.addEventListener('pointerleave', onLeave)
+    if (interactive) {
+      window.addEventListener('pointermove', onMove, { passive: true })
+      parent.addEventListener('pointerleave', onLeave)
+    }
     let inView = true
     const setRunning = () => {
       const should = inView && !document.hidden
@@ -210,11 +247,13 @@ export default function PialBrain({ reduced = false, quality = 'high', onReady, 
     return () => {
       cancelAnimationFrame(raf)
       document.removeEventListener('visibilitychange', setRunning)
-      window.removeEventListener('pointermove', onMove)
-      parent.removeEventListener('pointerleave', onLeave)
+      if (interactive) {
+        window.removeEventListener('pointermove', onMove)
+        parent.removeEventListener('pointerleave', onLeave)
+      }
       io.disconnect(); ro.disconnect()
     }
-  }, [reduced, quality])
+  }, [reduced, quality, density, spinMul, fpsCap, ambient, interactive])
 
   return <canvas ref={canvasRef} className={className} aria-hidden />
 }

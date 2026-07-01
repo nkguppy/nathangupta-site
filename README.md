@@ -95,7 +95,13 @@ Generic-card recipe: `FONTCONFIG_FILE=<conf> rsvg-convert -w 1200 -h 630 scripts
   gyri (not a nearest-neighbour web). On mount it **assembles from a sphere into the brain** (the
   page-load transition); the cursor pulls + wires the surface; a drifting ambient field adds depth.
   Spin 1.5×, density 6,000, fold-lines on. A static SVG is the no‑JS / pre‑frame fallback; reduced
-  motion holds one still frame. (Desktop only — by design, no graphic on mobile.)
+  motion holds one still frame. On desktop this is the light-theme/no-WebGL fallback behind the
+  WebGL `SurfaceBrain`; on mobile/tablet (<1024px) the hero renders **`HeroBrainMobile`** — the
+  same PialBrain as a **masked backdrop** behind the headline, dialled down (2,400 pts, 30fps cap,
+  slower spin, no motes/cursor, idle-deferred chunk, fades in after the text). Dials live in the
+  constants block of `HeroBrainMobile.tsx`; `?mbrain=off`, `?mop=<0..1>` and `?mdens=<n>` work on
+  the LIVE site so the treatment can be judged on a real phone. Light theme inherits PialBrain's
+  faint light read, same as desktop-light.
 - **Framework / "three layers"** — `components/site/Framework.tsx`: Nathan's dartboard model
   (individual ⊂ team ⊂ workplace) as an interactive nested-scope element with 3D tilt + spotlight.
 - **Writing** — `pages/WritingPage.tsx`: Type + Topic filters that fade/stagger the matching

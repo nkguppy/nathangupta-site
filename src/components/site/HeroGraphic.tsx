@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils'
 /**
  * Hero graphic — a glowing cortical-surface brain over a static SVG base/fallback.
  *
- * DESKTOP ONLY: the parent Hero mounts this wrapper at ≥lg (hidden lg:block), per
- * Nathan's brief of no hero graphic on mobile — so on phones/tablets nothing here
- * renders and the hero is the fully-centred content layout (see README).
+ * DESKTOP ONLY: the parent Hero mounts this wrapper at ≥lg (hidden lg:block).
+ * Below lg the hero instead renders HeroBrainMobile — a masked, dialled-down
+ * 2D PialBrain backdrop behind the headline (see that file for the dials).
  *
  * When mounted, a WebGL-capable dark desktop renders the real 3D surface brain
  * (SurfaceBrain, lazy-loaded so three.js is a separate chunk). The remaining

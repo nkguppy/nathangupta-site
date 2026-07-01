@@ -39,10 +39,17 @@ export function HeroLab() {
     mut(u)
     window.location.assign(u.toString())
   }
+  const mbrainOff = params.get('mbrain') === 'off'
+  const mop = params.get('mop') ?? 'default'
+  const mdens = params.get('mdens') ?? 'default'
+
   const setParticles = (on: boolean) => go((u) => (on ? u.searchParams.set('particles', 'on') : u.searchParams.delete('particles')))
   const setFx = (v: string) => go((u) => (v === 'none' ? u.searchParams.delete('fx') : u.searchParams.set('fx', v)))
   const setPalette = (v: BrainPalette) => go((u) => (v === DEFAULT_BRAIN_PALETTE ? u.searchParams.delete('palette') : u.searchParams.set('palette', v)))
   const setLayout = (v: string) => go((u) => (v === 'wide' ? u.searchParams.delete('layout') : u.searchParams.set('layout', v)))
+  const setMBrain = (on: boolean) => go((u) => (on ? u.searchParams.delete('mbrain') : u.searchParams.set('mbrain', 'off')))
+  const setMop = (v: string) => go((u) => (v === 'default' ? u.searchParams.delete('mop') : u.searchParams.set('mop', v)))
+  const setMdens = (v: string) => go((u) => (v === 'default' ? u.searchParams.delete('mdens') : u.searchParams.set('mdens', v)))
 
   return (
     <details
@@ -84,8 +91,22 @@ export function HeroLab() {
             ))}
           </div>
         </div>
+        <div className="flex items-start gap-2">
+          <span className="mt-1 w-16 shrink-0 text-[0.58rem] uppercase tracking-[0.14em] text-foreground/40">M-brain</span>
+          <div className="flex flex-wrap gap-1">
+            <Btn active={!mbrainOff} onClick={() => setMBrain(true)}>on</Btn>
+            <Btn active={mbrainOff} onClick={() => setMBrain(false)}>off</Btn>
+            {['0.35', 'default', '0.7'].map((v) => (
+              <Btn key={v} active={mop === v || (v === 'default' && mop === 'default')} onClick={() => setMop(v)}>{v === 'default' ? 'op·55' : `op·${v.slice(2)}`}</Btn>
+            ))}
+            {['1800', 'default', '3000'].map((v) => (
+              <Btn key={v} active={mdens === v || (v === 'default' && mdens === 'default')} onClick={() => setMdens(v)}>{v === 'default' ? 'd·2400' : `d·${v}`}</Btn>
+            ))}
+          </div>
+        </div>
         <p className="text-[0.56rem] leading-snug text-foreground/35">
-          cursor = move mouse over brain · entrance = reloads to assemble · layout = wide spreads + bleeds the brain · combinable
+          cursor = move mouse over brain · entrance = reloads to assemble · layout = wide spreads + bleeds the brain ·
+          M-brain = the mobile backdrop (&lt;1024px; ?mbrain/?mop/?mdens also work on the LIVE site) · combinable
         </p>
       </div>
     </details>
