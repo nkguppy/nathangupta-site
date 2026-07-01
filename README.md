@@ -161,5 +161,12 @@ nathangupta.com in ~1–2 min. Manual deploy if ever needed:
   apex/www records (keep MX/TXT). Set **www** as the primary domain in Netlify; HTTPS is automatic.
   Propagation: minutes–48h.
 
-`public/_redirects` + `netlify.toml` both carry the `/* → /index.html 200` SPA fallback;
-`public/robots.txt` + `public/sitemap.xml` ship for crawlers.
+`netlify.toml` carries the `/* → /index.html 200` SPA fallback. **Prerender:** `npm run build`
+chains `scripts/prerender.ts` after `vite build` — it writes per-route static HTML
+(`dist/<route>/index.html`, correct title/description/canonical/og/twitter tags, BlogPosting
+JSON-LD + full-text `<noscript>` on posts) that Netlify serves ahead of the SPA fallback, and
+generates `dist/sitemap.xml` from `src/data/site.ts` (the hand-maintained sitemap is gone).
+Its head rewrites are FAIL-LOUD: editing `index.html`'s head so a pattern no longer matches
+exactly once breaks the build by design — update the patterns in `scripts/prerender.ts`.
+`src/data/site.ts` + `src/lib/og.ts` must stay loadable under plain Node (no `@/` aliases, no
+runtime deps). `public/robots.txt` ships for crawlers.

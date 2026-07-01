@@ -1,4 +1,6 @@
-import { posts } from '@/data/site'
+// Relative .ts import (not the '@/' alias) so scripts/prerender.ts can load
+// this module under plain Node type stripping, where the alias doesn't exist.
+import { posts } from '../data/site.ts'
 
 /** The generic branded card — carries the home route and any unknown path. */
 export const OG_DEFAULT = '/og.png'
